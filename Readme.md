@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Yaroslav Lazovsky](https://up.htmlacademy.ru/javascript/18/user/995693).
-* Наставник: `Неизвестно`.
+* Наставник: [Даниил Царёв](https://htmlacademy.ru/profile/id945835).
 
 ---
 
