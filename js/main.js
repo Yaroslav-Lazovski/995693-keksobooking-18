@@ -1,3 +1,5 @@
+'use strict';
+
 var TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var CHECK = ['12:00', '13:00', '14:00'];
@@ -55,12 +57,13 @@ var getOffers = function () {
         'description': 'Лучшее предложение',
         'photos': getPhotos(title),
       }
-    })
+    });
   }
 
   return offers;
 };
 
-var offer1 = getOffers();
+var offer = getOffers();
 
-console.log(offer1);
+// eslint-disable-next-line no-console
+console.log(offer);
