@@ -69,8 +69,6 @@ var getOffers = function (n) {
   return offers;
 };
 
-var offers = getOffers(8);
-
 var createPin = function (offer) {
   var pinOffsetY = 62 / 2 + 22;
   var pinOffsetX = 62 / 2;
@@ -107,4 +105,5 @@ var renderPins = function (offers) {
   mapPins.appendChild(fragment);
 };
 
+var offers = getOffers(8);
 renderPins(offers);
