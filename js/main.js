@@ -69,45 +69,42 @@ var getOffers = function (n) {
   return offers;
 };
 
-var createMark = function (offer) {
-  var markOffsetY = 62 / 2 + 22;
-  var markOffsetX = 62 / 2;
-  var yWithOffset = offer.location.y - markOffsetY;
-  var xWithOffset = offer.location.x + markOffsetX;
-  var markButton = document.createElement('button');
-  var markImg = document.createElement('img');
-
-  markButton.setAttribute('type', 'button');
-  markButton.setAttribute('class', 'map__pin');
-  markButton.setAttribute('style', 'left: ' + xWithOffset + 'px;' + 'top: ' + yWithOffset + 'px;');
-
-  markImg.setAttribute('src', offer.author.avatar);
-  markImg.setAttribute('alt', offer.offer.title);
-  markImg.setAttribute('width', '40');
-  markImg.setAttribute('height', '40');
-  markImg.setAttribute('draggable', 'false');
-
-  markButton.appendChild(markImg);
-
-  return markButton;
-};
-
-var getOffersElement = function (offers) {
-  var fragment = document.createDocumentFragment();
-
-  offers.forEach(function (offer) {
-    var offerMark = createMark(offer);
-    fragment.appendChild(offerMark);
-  });
-
-  return fragment;
-};
-
 var offers = getOffers(8);
 
-// eslint-disable-next-line no-console
-// console.log(offers);
-// console.log(getOffersElement(offers));
+var createPin = function (offer) {
+  var pinOffsetY = 62 / 2 + 22;
+  var pinOffsetX = 62 / 2;
+  var yWithOffset = offer.location.y - pinOffsetY;
+  var xWithOffset = offer.location.x + pinOffsetX;
+  var pinButton = document.createElement('button');
+  var pinImg = document.createElement('img');
 
-var mapPins = document.querySelector('.map__pins');
-mapPins.appendChild(getOffersElement(offers));
+  pinButton.setAttribute('type', 'button');
+  pinButton.setAttribute('class', 'map__pin');
+  pinButton.setAttribute('style', 'left: ' + xWithOffset + 'px;' + 'top: ' + yWithOffset + 'px;');
+
+  pinImg.setAttribute('src', offer.author.avatar);
+  pinImg.setAttribute('alt', offer.offer.title);
+  pinImg.setAttribute('width', '40');
+  pinImg.setAttribute('height', '40');
+  pinImg.setAttribute('draggable', 'false');
+
+  pinButton.appendChild(pinImg);
+
+  return pinButton;
+};
+
+
+var renderPins = function (offers) {
+  var fragment = document.createDocumentFragment();
+
+  for (var i = 0; i < offers.length; i++) {
+    var pin = createPin(offers[i]);
+    fragment.appendChild(pin);
+  }
+
+  var mapPins = document.querySelector('.map__pins');
+  mapPins.appendChild(fragment);
+};
+
+renderPins(offers);
