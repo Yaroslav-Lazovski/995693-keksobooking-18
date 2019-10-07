@@ -3,11 +3,20 @@
 var TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var CHECK = ['12:00', '13:00', '14:00'];
+var ENTER_KEYCODE = 13;
 var map = document.querySelector('.map');
 var mapWidth = map.offsetWidth;
-map.classList.remove('map--faded');
 var cardTemplate = document.querySelector('#card').content.querySelector('article');
-// var popupPhotos = cardTemplate.querySelector('.popup__photos');
+var adformFieldsets = document.querySelector('.ad-form').querySelectorAll('fieldset');
+var mapFiltersContainer = document.querySelector('.map__filters-container');
+var mapFiltersFormSelects = document.querySelector('.map__filters').querySelectorAll('select, fieldset');
+var mapPinMain = document.querySelector('.map__pin--main');
+
+
+
+
+
+
 
 
 var getRandomBetween = function (min, max) {
@@ -23,7 +32,7 @@ var chooseRandom = function (arr) {
 };
 
 var getPhotos = function () {
-  var photoCount = getRandomBetween(1, 8);
+  var photoCount = getRandomBetween(1, 5);
   var photos = [];
 
   for (var i = 0; i < photoCount; i++) {
@@ -49,7 +58,7 @@ var getOffer = function (i) {
     'offer': {
       'title': title,
       'address': 'Координаты : (' + location.x + ' ' + location.y + ')',
-      'price': getRandomBetween(1, 5000) * 10,
+      'price': getRandomBetween(10, 50000),
       'type': chooseRandom(TYPES),
       'rooms': getRandomBetween(1, 9),
       'guests': getRandomBetween(0, 10),
@@ -162,8 +171,40 @@ var createAd = function (offer) {
   return cardElement;
 };
 
+var addAttributeToFieldset = function () {
+  for (var i = 0; i < adformFieldsets.length; i++) {
+    adformFieldsets[i].setAttribute("disabled", "disabled");
+  }
+};
+
+var addAttributeToSelect = function () {
+  for (var i = 0; i < mapFiltersFormSelects.length; i++) {
+    mapFiltersFormSelects[i].setAttribute("disabled", "disabled");
+  }
+};
+
+var onMapPinMainMousedown = function () {
+  map.classList.remove('map--faded');
+
+  for (var i = 0; i < adformFieldsets.length; i++) {
+    adformFieldsets[i].removeAttribute("disabled", "disabled");
+  }
+
+  for (var i = 0; i < mapFiltersFormSelects.length; i++) {
+    mapFiltersFormSelects[i].removeAttribute("disabled", "disabled");
+  }
+};
+
+mapPinMain.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    onMapPinMainMousedown();
+  }
+});
+
+mapPinMain.addEventListener('mousedown', onMapPinMainMousedown);
+
 var offers = getOffers(8);
 renderPins(offers);
 
-// eslint-disable-next-line no-unused-vars
 var offerAd = createAd(offers[0]);
+map.insertBefore(offerAd, mapFiltersContainer);
