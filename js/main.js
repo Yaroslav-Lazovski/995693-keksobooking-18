@@ -6,6 +6,9 @@ var CHECK = ['12:00', '13:00', '14:00'];
 var map = document.querySelector('.map');
 var mapWidth = map.offsetWidth;
 map.classList.remove('map--faded');
+var cardTemplate = document.querySelector('#card').content.querySelector('article');
+// var popupPhotos = cardTemplate.querySelector('.popup__photos');
+
 
 var getRandomBetween = function (min, max) {
   var rand = min - 0.5 + Math.random() * (max - min + 1);
@@ -19,12 +22,12 @@ var chooseRandom = function (arr) {
   return arr[rand];
 };
 
-var getPhotos = function (offerTitle) {
-  var photoCount = getRandomBetween(1, 5);
+var getPhotos = function () {
+  var photoCount = getRandomBetween(1, 8);
   var photos = [];
 
   for (var i = 0; i < photoCount; i++) {
-    photos.push('http://github.io/assets/images/tokyo/hotel' + offerTitle + i + '.jpg');
+    photos.push('http://github.io/assets/images/tokyo/hotel' + i + '.jpg');
   }
 
   return photos;
@@ -35,18 +38,18 @@ var getOffer = function (i) {
     'x': getRandomBetween(0, mapWidth),
     'y': getRandomBetween(130, 630),
   };
-  var title = 'Предложение №' + i;
-  var user = i + 1;
+  var userCount = i + 1;
+  var title = 'Предложение №' + userCount;
 
   return {
     'author': {
-      'avatar': 'img/avatars/user0' + user + '.png',
+      'avatar': 'img/avatars/user0' + userCount + '.png',
     },
     'location': location,
     'offer': {
       'title': title,
       'address': 'Координаты : (' + location.x + ' ' + location.y + ')',
-      'price': getRandomBetween(1, 5000) * 1000,
+      'price': getRandomBetween(1, 5000) * 10,
       'type': chooseRandom(TYPES),
       'rooms': getRandomBetween(1, 9),
       'guests': getRandomBetween(0, 10),
@@ -92,7 +95,6 @@ var createPin = function (offer) {
   return pinButton;
 };
 
-
 var renderPins = function (offers) {
   var fragment = document.createDocumentFragment();
 
@@ -105,5 +107,63 @@ var renderPins = function (offers) {
   mapPins.appendChild(fragment);
 };
 
+var createPhoto = function (offer) {
+  var photos = [];
+  for (var i = 0; i < offer.offer.photos.length; i++) {
+    var popupImg = document.createElement('img');
+
+    popupImg.setAttribute('src', offer.offer.photos[i]);
+    popupImg.setAttribute('class', 'popup__photo');
+    popupImg.setAttribute('width', '45');
+    popupImg.setAttribute('height', '40');
+    popupImg.setAttribute('alt', 'Фотография жилья');
+
+    photos.push(popupImg);
+  }
+  return photos;
+};
+
+var getOfferTypeText = function (offer) {
+  switch (offer.offer.type) {
+    case 'palace':
+      return 'Дворец';
+    case 'flat':
+      return 'Квартира';
+    case 'house':
+      return 'Дом';
+    case 'bungalo':
+      return 'Бунгало';
+  }
+  return null;
+};
+
+var createAd = function (offer) {
+  var cardElement = cardTemplate.cloneNode(true);
+  cardElement.querySelector('.popup__title').textContent = offer.offer.title;
+  cardElement.querySelector('.popup__text--address').textContent = offer.offer.address;
+  cardElement.querySelector('.popup__text--price').textContent = offer.offer.price + '₽/ночь';
+  cardElement.querySelector('.popup__text--capacity').textContent = offer.offer.rooms + ' комнаты для ' + offer.offer.guests + ' гостей';
+  cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + offer.offer.checkin + ', выезд до ' + offer.offer.checkout;
+  cardElement.querySelector('.popup__features').textContent = offer.offer.features;
+  cardElement.querySelector('.popup__description').textContent = offer.offer.description;
+  cardElement.querySelector('.popup__avatar').src = offer.author.avatar;
+  cardElement.querySelector('.popup__type').textContent = getOfferTypeText(offer);
+
+  var photos = createPhoto(offer);
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < photos.length; i++) {
+    fragment.appendChild(photos[i]);
+  }
+
+  var popupPhotos = cardElement.querySelector('.popup__photos');
+  popupPhotos.removeChild(popupPhotos.querySelector('.popup__photo'));
+  cardElement.querySelector('.popup__photos').appendChild(fragment);
+
+  return cardElement;
+};
+
 var offers = getOffers(8);
 renderPins(offers);
+
+// eslint-disable-next-line no-unused-vars
+var offerAd = createAd(offers[0]);
