@@ -6,17 +6,20 @@ var CHECK = ['12:00', '13:00', '14:00'];
 var ENTER_KEYCODE = 13;
 var map = document.querySelector('.map');
 var mapWidth = map.offsetWidth;
-var cardTemplate = document.querySelector('#card').content.querySelector('article');
-var adformFieldsets = document.querySelector('.ad-form').querySelectorAll('fieldset');
 var mapFiltersContainer = document.querySelector('.map__filters-container');
-var mapFiltersFormSelects = document.querySelector('.map__filters').querySelectorAll('select, fieldset');
+var mapFiltersFormSelects = mapFiltersContainer.querySelectorAll('select, fieldset');
 var mapPinMain = document.querySelector('.map__pin--main');
-
-
-
-
-
-
+var mapPinMainSmall = mapPinMain.querySelector('img');
+var mapPinMainX = Math.round(mapPinMain.offsetLeft + mapPinMain.offsetWidth / 2);
+var mapPinMainY = Math.round(mapPinMain.offsetTop + mapPinMain.offsetHeight / 2);
+var mapPinMainSmallX = Math.round(mapPinMainSmall.offsetLeft + mapPinMainSmall.offsetWidth / 2);
+var mapPinMainSmallY = Math.round(mapPinMainSmall.offsetTop + mapPinMainSmall.offsetHeight / 2 + 22);
+var adForm = document.querySelector('.ad-form');
+var adformFieldsets = adForm.querySelectorAll('fieldset');
+var cardTemplate = document.querySelector('#card').content.querySelector('article');
+var address = document.querySelector('#address');
+var roomNumber = document.getElementById('room_number');
+var capacity = document.getElementById('capacity');
 
 
 var getRandomBetween = function (min, max) {
@@ -171,28 +174,19 @@ var createAd = function (offer) {
   return cardElement;
 };
 
-var addAttributeToFieldset = function () {
-  for (var i = 0; i < adformFieldsets.length; i++) {
-    adformFieldsets[i].setAttribute("disabled", "disabled");
-  }
-};
-
-var addAttributeToSelect = function () {
-  for (var i = 0; i < mapFiltersFormSelects.length; i++) {
-    mapFiltersFormSelects[i].setAttribute("disabled", "disabled");
-  }
-};
-
 var onMapPinMainMousedown = function () {
   map.classList.remove('map--faded');
+  adForm.classList.remove('ad-form--disabled');
 
   for (var i = 0; i < adformFieldsets.length; i++) {
-    adformFieldsets[i].removeAttribute("disabled", "disabled");
+    adformFieldsets[i].removeAttribute('disabled', 'disabled');
   }
 
-  for (var i = 0; i < mapFiltersFormSelects.length; i++) {
-    mapFiltersFormSelects[i].removeAttribute("disabled", "disabled");
+  for (var j = 0; j < mapFiltersFormSelects.length; j++) {
+    mapFiltersFormSelects[j].removeAttribute('disabled', 'disabled');
   }
+
+  address.setAttribute('value', mapPinMainSmallX + ', ' + mapPinMainSmallY);
 };
 
 mapPinMain.addEventListener('keydown', function (evt) {
@@ -201,6 +195,30 @@ mapPinMain.addEventListener('keydown', function (evt) {
   }
 });
 
+var onSelectChange = function (select) {
+  if (select.options[0].selected) {
+    capacity.options[0].setAttribute('disabled', 'disabled');
+    capacity.options[1].setAttribute('disabled', 'disabled');
+    capacity.options[2].removeAttribute('disabled');
+    capacity.options[3].setAttribute('disabled', 'disabled');
+  } else if (select.options[1].selected) {
+    capacity.options[0].setAttribute('disabled', 'disabled');
+    capacity.options[1].removeAttribute('disabled');
+    capacity.options[3].setAttribute('disabled', 'disabled');
+  } else if (select.options[2].selected) {
+    capacity.options[0].removeAttribute('disabled');
+    capacity.options[1].removeAttribute('disabled');
+    capacity.options[2].removeAttribute('disabled');
+  } else if (select.options[3].selected) {
+    capacity.options[0].setAttribute('disabled', 'disabled');
+    capacity.options[1].setAttribute('disabled', 'disabled');
+    capacity.options[2].setAttribute('disabled', 'disabled');
+    capacity.options[3].removeAttribute('disabled');
+  }
+};
+
+address.setAttribute('value', mapPinMainX + ', ' + mapPinMainY);
+
 mapPinMain.addEventListener('mousedown', onMapPinMainMousedown);
 
 var offers = getOffers(8);
@@ -208,3 +226,5 @@ renderPins(offers);
 
 var offerAd = createAd(offers[0]);
 map.insertBefore(offerAd, mapFiltersContainer);
+
+onSelectChange(roomNumber);
