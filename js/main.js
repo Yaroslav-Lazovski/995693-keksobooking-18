@@ -7,13 +7,8 @@ var ENTER_KEYCODE = 13;
 var map = document.querySelector('.map');
 var mapWidth = map.offsetWidth;
 var mapFiltersContainer = document.querySelector('.map__filters-container');
-var mapFiltersFormSelects = mapFiltersContainer.querySelectorAll('select, fieldset');
 var mapPinMain = document.querySelector('.map__pin--main');
 var mapPinMainSmall = mapPinMain.querySelector('img');
-var mapPinMainX = Math.round(mapPinMain.offsetLeft + mapPinMain.offsetWidth / 2);
-var mapPinMainY = Math.round(mapPinMain.offsetTop + mapPinMain.offsetHeight / 2);
-var mapPinMainSmallX = Math.round(mapPinMainSmall.offsetLeft + mapPinMainSmall.offsetWidth / 2);
-var mapPinMainSmallY = Math.round(mapPinMainSmall.offsetTop + mapPinMainSmall.offsetHeight / 2 + 22);
 var adForm = document.querySelector('.ad-form');
 var adformFieldsets = adForm.querySelectorAll('fieldset');
 var cardTemplate = document.querySelector('#card').content.querySelector('article');
@@ -35,11 +30,11 @@ var chooseRandom = function (arr) {
 };
 
 var getPhotos = function () {
-  var photoCount = getRandomBetween(1, 5);
+  var photoCount = getRandomBetween(1, 3);
   var photos = [];
 
   for (var i = 0; i < photoCount; i++) {
-    photos.push('http://github.io/assets/images/tokyo/hotel' + i + '.jpg');
+    photos.push('http://o0.github.io/assets/images/tokyo/hotel' + (i + 1) + '.jpg');
   }
 
   return photos;
@@ -174,57 +169,70 @@ var createAd = function (offer) {
   return cardElement;
 };
 
-var onMapPinMainMousedown = function () {
+var setFieldsEnabled = function (fieldsets, enabled) {
+  for (var i = 0; i < fieldsets.length; i++) {
+    if (enabled) {
+      fieldsets[i].removeAttribute('disabled', 'disabled');
+    } else {
+      fieldsets[i].setAttribute('disabled', 'disabled');
+    }
+  }
+};
+
+var onMainPinClick = function () {
   map.classList.remove('map--faded');
   adForm.classList.remove('ad-form--disabled');
-
-  for (var i = 0; i < adformFieldsets.length; i++) {
-    adformFieldsets[i].removeAttribute('disabled', 'disabled');
-  }
-
-  for (var j = 0; j < mapFiltersFormSelects.length; j++) {
-    mapFiltersFormSelects[j].removeAttribute('disabled', 'disabled');
-  }
-
-  address.setAttribute('value', mapPinMainSmallX + ', ' + mapPinMainSmallY);
+  address.value = getMainSmallPinLocation(mapPinMainSmall);
+  setFieldsEnabled(adformFieldsets, true);
 };
 
 mapPinMain.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
-    onMapPinMainMousedown();
+    onMainPinClick();
   }
 });
 
-var onSelectChange = function (select) {
-  if (select.options[0].selected) {
-    capacity.options[0].setAttribute('disabled', 'disabled');
-    capacity.options[1].setAttribute('disabled', 'disabled');
-    capacity.options[2].removeAttribute('disabled');
-    capacity.options[3].setAttribute('disabled', 'disabled');
-  } else if (select.options[1].selected) {
-    capacity.options[0].setAttribute('disabled', 'disabled');
-    capacity.options[1].removeAttribute('disabled');
-    capacity.options[3].setAttribute('disabled', 'disabled');
-  } else if (select.options[2].selected) {
-    capacity.options[0].removeAttribute('disabled');
-    capacity.options[1].removeAttribute('disabled');
-    capacity.options[2].removeAttribute('disabled');
-  } else if (select.options[3].selected) {
-    capacity.options[0].setAttribute('disabled', 'disabled');
-    capacity.options[1].setAttribute('disabled', 'disabled');
-    capacity.options[2].setAttribute('disabled', 'disabled');
-    capacity.options[3].removeAttribute('disabled');
-  }
+var getMainPinLocation = function (mainPin) {
+  var x = Math.round(mainPin.offsetLeft + mainPin.offsetWidth / 2);
+  var y = Math.round(mainPin.offsetTop + mainPin.offsetHeight / 2);
+
+  return x + ', ' + y;
 };
 
-address.setAttribute('value', mapPinMainX + ', ' + mapPinMainY);
+var getMainSmallPinLocation = function (smallPin) {
+  var x = Math.round(smallPin.offsetLeft + smallPin.offsetWidth / 2);
+  var y = Math.round(smallPin.offsetTop + smallPin.offsetHeight / 2 + 22);
 
-mapPinMain.addEventListener('mousedown', onMapPinMainMousedown);
+  return x + ', ' + y;
+};
+
+var filterCapacityOptions = function () {
+  var rooms = parseInt(roomNumber.value, 10);
+  var suitableCapacity;
+
+  for (var i = 0; i < capacity.options.length; i++) {
+    var capacityOption = capacity.options[i];
+    var guests = parseInt(capacityOption.value, 10);
+
+    if ((guests === 0 && rooms === 100) || (guests <= rooms && guests !== 0 && rooms !== 100)) {
+      capacityOption.removeAttribute('disabled');
+      suitableCapacity = capacityOption;
+    } else {
+      capacityOption.setAttribute('disabled', 'disabled');
+    }
+  }
+  suitableCapacity.setAttribute('selected', 'selected');
+};
+
+filterCapacityOptions();
+address.value = getMainPinLocation(mapPinMain);
+
+mapPinMain.addEventListener('mousedown', onMainPinClick);
+roomNumber.addEventListener('change', filterCapacityOptions);
+setFieldsEnabled(adformFieldsets, false);
 
 var offers = getOffers(8);
 renderPins(offers);
 
 var offerAd = createAd(offers[0]);
 map.insertBefore(offerAd, mapFiltersContainer);
-
-onSelectChange(roomNumber);
