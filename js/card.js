@@ -58,9 +58,4 @@
 
   var offerAd = createAd(window.data.offers[0]);
   window.map.map.insertBefore(offerAd, window.map.mapFiltersContainer);
-
-  window.card = {
-    offerAd: createAd(window.data.offers[0]),
-    renderAd: window.map.map.insertBefore(offerAd, window.map.mapFiltersContainer)
-  };
 })();

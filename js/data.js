@@ -7,20 +7,8 @@
   var map = document.querySelector('.map');
   var mapWidth = map.offsetWidth;
 
-  var getRandomBetween = function (min, max) {
-    var rand = min - 0.5 + Math.random() * (max - min + 1);
-    return Math.round(rand);
-  };
-
-  var chooseRandom = function (arr) {
-    var max = arr.length - 1;
-    var rand = getRandomBetween(0, max);
-
-    return arr[rand];
-  };
-
   var getPhotos = function () {
-    var photoCount = getRandomBetween(1, 3);
+    var photoCount = window.utility.getRandomBetween(1, 3);
     var photos = [];
 
     for (var i = 0; i < photoCount; i++) {
@@ -32,8 +20,8 @@
 
   var getOffer = function (i) {
     var location = {
-      'x': getRandomBetween(0, mapWidth),
-      'y': getRandomBetween(130, 630),
+      'x': window.utility.getRandomBetween(0, mapWidth),
+      'y': window.utility.getRandomBetween(130, 630),
     };
     var userCount = i + 1;
     var title = 'Предложение №' + userCount;
@@ -46,13 +34,13 @@
       'offer': {
         'title': title,
         'address': 'Координаты : (' + location.x + ' ' + location.y + ')',
-        'price': getRandomBetween(10, 50000),
-        'type': chooseRandom(TYPES),
-        'rooms': getRandomBetween(1, 9),
-        'guests': getRandomBetween(0, 10),
-        'checkin': chooseRandom(CHECK),
-        'checkout': chooseRandom(CHECK),
-        'features': chooseRandom(FEATURES),
+        'price': window.utility.getRandomBetween(10, 50000),
+        'type': window.utility.chooseRandom(TYPES),
+        'rooms': window.utility.getRandomBetween(1, 9),
+        'guests': window.utility.getRandomBetween(0, 10),
+        'checkin': window.utility.chooseRandom(CHECK),
+        'checkout': window.utility.chooseRandom(CHECK),
+        'features': window.utility.chooseRandom(FEATURES),
         'description': 'Лучшее предложение',
         'photos': getPhotos(title),
       }
@@ -69,9 +57,9 @@
     return offers;
   };
 
-  var offers = getOffers(8);
+  // var offers = getOffers(8);
 
   window.data = {
-    offers: offers
+    offers: getOffers(8)
   };
 })();
