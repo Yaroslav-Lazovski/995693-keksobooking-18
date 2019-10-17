@@ -34,17 +34,17 @@
     return pinButton;
   };
 
-  // var renderPins = function (offers) {
-  //   var fragment = document.createDocumentFragment();
+  var renderPins = function (offers) {
+    var fragment = document.createDocumentFragment();
 
-  //   for (var i = 0; i < offers.length; i++) {
-  //     var pin = createPin(offers[i]);
-  //     fragment.appendChild(pin);
-  //   }
+    for (var i = 0; i < offers.length; i++) {
+      var pin = createPin(offers[i]);
+      fragment.appendChild(pin);
+    }
 
-  //   var mapPins = document.querySelector('.map__pins');
-  //   mapPins.appendChild(fragment);
-  // };
+    var mapPins = document.querySelector('.map__pins');
+    mapPins.appendChild(fragment);
+  };
 
   var onMainPinClick = function () {
     map.classList.remove('map--faded');
@@ -73,28 +73,22 @@
     return x + ', ' + y;
   };
 
-  var successHandler = function (offers) {
-    var fragment = document.createDocumentFragment();
-
-    for (var i = 0; i < offers.length; i++) {
-      var pin = window.map.createPin(offers[i]);
-      fragment.appendChild(pin);
-    }
-
-    var mapPins = document.querySelector('.map__pins');
-    mapPins.appendChild(fragment);
-  };
-
-  var errorHandler = function () {
+  var showErrorMessage = function () {
     var template = document.querySelector('#error').content.querySelector('div');
     var main = document.querySelector('main');
     var element = template.cloneNode(true);
     main.appendChild(element);
   };
 
-  window.load(successHandler, errorHandler);
+  var successHandler = function (data) {
+    renderPins(data);
+  };
 
-  // renderPins(window.data.offers);
+  var errorHandler = function () {
+    showErrorMessage();
+  };
+
+  window.load(successHandler, errorHandler);
 
   mapPinMain.addEventListener('mousedown', onMainPinClick);
 
