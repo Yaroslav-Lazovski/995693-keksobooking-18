@@ -73,7 +73,22 @@
     return x + ', ' + y;
   };
 
-  renderPins(window.data.offers);
+  var showErrorMessage = function () {
+    var template = document.querySelector('#error').content.querySelector('div');
+    var main = document.querySelector('main');
+    var element = template.cloneNode(true);
+    main.appendChild(element);
+  };
+
+  var successHandler = function (data) {
+    renderPins(data);
+  };
+
+  var errorHandler = function () {
+    showErrorMessage();
+  };
+
+  window.load(successHandler, errorHandler);
 
   mapPinMain.addEventListener('mousedown', onMainPinClick);
 
@@ -83,6 +98,7 @@
     cardTemplate: cardTemplate,
     mapFiltersContainer: mapFiltersContainer,
     getMainPinLocation: getMainPinLocation,
-    getMainSmallPinLocation: getMainSmallPinLocation
+    getMainSmallPinLocation: getMainSmallPinLocation,
+    createPin: createPin
   };
 })();
