@@ -57,8 +57,6 @@
     return offers;
   };
 
-  // var offers = getOffers(8);
-
   window.data = {
     offers: getOffers(8)
   };
