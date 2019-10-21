@@ -9,6 +9,7 @@
   var mapPinMainSmall = mapPinMain.querySelector('img');
   var housingType = document.getElementById('housing-type');
 
+
   var createPin = function (offer) {
     var pinOffsetY = 62 / 2 + 22;
     var pinOffsetX = 62 / 2;

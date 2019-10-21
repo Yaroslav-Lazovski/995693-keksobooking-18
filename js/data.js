@@ -5,6 +5,7 @@
   var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
   var CHECK = ['12:00', '13:00', '14:00'];
 
+
   var getPhotos = function () {
     var photoCount = window.utility.getRandomBetween(1, 3);
     var photos = [];
