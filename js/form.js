@@ -17,6 +17,15 @@
     }
   };
 
+  var toggleFormEnabled = function (enabled) {
+    if (enabled) {
+      adForm.classList.remove('ad-form--disabled');
+    } else {
+      adForm.classList.add('ad-form--disabled');
+    }
+    setFieldsEnabled(adformFieldsets, enabled);
+  };
+
   var filterCapacityOptions = function () {
     var rooms = parseInt(roomNumber.value, 10);
     var suitableCapacity;
@@ -42,6 +51,8 @@
   setFieldsEnabled(adformFieldsets, false);
 
   window.form = {
-    setFieldsEnabled: setFieldsEnabled,
+    address: address,
+
+    toggleFormEnabled: toggleFormEnabled
   };
 })();

@@ -4,8 +4,6 @@
   var TYPES = ['palace', 'flat', 'house', 'bungalo'];
   var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
   var CHECK = ['12:00', '13:00', '14:00'];
-  var map = document.querySelector('.map');
-  var mapWidth = map.offsetWidth;
 
   var getPhotos = function () {
     var photoCount = window.utility.getRandomBetween(1, 3);
@@ -20,7 +18,7 @@
 
   var getOffer = function (i) {
     var location = {
-      'x': window.utility.getRandomBetween(0, mapWidth),
+      'x': window.utility.getRandomBetween(0, window.map.mapWidth),
       'y': window.utility.getRandomBetween(130, 630),
     };
     var userCount = i + 1;

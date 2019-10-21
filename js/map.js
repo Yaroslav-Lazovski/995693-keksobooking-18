@@ -3,13 +3,10 @@
 (function () {
   var ENTER_KEYCODE = 13;
   var map = document.querySelector('.map');
-  var cardTemplate = document.querySelector('#card').content.querySelector('article');
+  var mapWidth = map.offsetWidth;
   var mapFiltersContainer = document.querySelector('.map__filters-container');
-  var adForm = document.querySelector('.ad-form');
-  var address = document.querySelector('#address');
   var mapPinMain = document.querySelector('.map__pin--main');
   var mapPinMainSmall = mapPinMain.querySelector('img');
-  var adformFieldsets = adForm.querySelectorAll('fieldset');
   var housingType = document.getElementById('housing-type');
 
   var createPin = function (offer) {
@@ -47,20 +44,20 @@
     mapPins.appendChild(fragment);
   };
 
-  var onMainPinClick = function () {
-    map.classList.remove('map--faded');
-    adForm.classList.remove('ad-form--disabled');
-    address.value = getMainSmallPinLocation(mapPinMainSmall);
-    window.form.setFieldsEnabled(adformFieldsets, true);
-
-    applyFilter();
+  var toggleMapEnabled = function (enabled) {
+    if (enabled) {
+      map.classList.remove('map--faded');
+    } else {
+      map.classList.add('map--faded');
+    }
   };
 
-  mapPinMain.addEventListener('keydown', function (evt) {
+  var onMainPinPressEnter = function (evt) {
     if (evt.keyCode === ENTER_KEYCODE) {
-      onMainPinClick();
+      toggleMapEnabled();
+      window.form.toggleFormEnabled();
     }
-  });
+  };
 
   var getMainPinLocation = function (mainPin) {
     var x = Math.round(mainPin.offsetLeft + mainPin.offsetWidth / 2);
@@ -76,52 +73,7 @@
     return x + ', ' + y;
   };
 
-  var showErrorMessage = function () {
-    var template = document.querySelector('#error').content.querySelector('div');
-    var main = document.querySelector('main');
-    var element = template.cloneNode(true);
-    main.appendChild(element);
-  };
-
-  var filterHousingType = function (pins) {
-    var selectedHousingType = housingType.options[housingType.selectedIndex].value;
-
-    if (selectedHousingType === 'any') {
-      return pins;
-    }
-
-    var filteredPins = [];
-
-    for (var i = 0; i < pins.length; i++) {
-      if (selectedHousingType === pins[i].offer.type) {
-        filteredPins.push(pins[i]);
-      }
-    }
-    return filteredPins;
-  };
-
-
-  var filterLimitPins = function (pins) {
-    return pins.slice(0, 5);
-  };
-
-  var updatePins = function (pins) {
-    pins = filterHousingType(pins);
-    pins = filterLimitPins(pins);
-    renderPins(pins);
-  };
-
-
-  var successHandler = function (data) {
-    var pins = data;
-    updatePins(pins);
-  };
-
-  var errorHandler = function () {
-    showErrorMessage();
-  };
-
-  var applyFilter = function () {
+  var clearMap = function () {
     var mapPin = document.querySelectorAll('.map__pin');
     mapPin.forEach(function (item) {
       if (item.classList.contains('map__pin--main')) {
@@ -130,20 +82,28 @@
 
       item.remove();
     });
-    window.load(successHandler, errorHandler);
   };
 
-  housingType.addEventListener('change', applyFilter);
-
-  mapPinMain.addEventListener('mousedown', onMainPinClick);
+  var setHousingTypeChangeListener = function (changeListener) {
+    housingType.addEventListener('change', function () {
+      changeListener(housingType.value);
+    });
+  };
 
   window.map = {
     map: map,
+    mapWidth: mapWidth,
     mapPinMain: mapPinMain,
-    cardTemplate: cardTemplate,
+    mapPinMainSmall: mapPinMainSmall,
     mapFiltersContainer: mapFiltersContainer,
+
+    createPin: createPin,
+    renderPins: renderPins,
+    toggleMapEnabled: toggleMapEnabled,
+    onMainPinPressEnter: onMainPinPressEnter,
     getMainPinLocation: getMainPinLocation,
     getMainSmallPinLocation: getMainSmallPinLocation,
-    createPin: createPin
+    clearMap: clearMap,
+    setHousingTypeChangeListener: setHousingTypeChangeListener
   };
 })();
