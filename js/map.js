@@ -3,13 +3,12 @@
 (function () {
   var ENTER_KEYCODE = 13;
   var map = document.querySelector('.map');
-  var cardTemplate = document.querySelector('#card').content.querySelector('article');
+  var mapWidth = map.offsetWidth;
   var mapFiltersContainer = document.querySelector('.map__filters-container');
-  var adForm = document.querySelector('.ad-form');
-  var address = document.querySelector('#address');
   var mapPinMain = document.querySelector('.map__pin--main');
   var mapPinMainSmall = mapPinMain.querySelector('img');
-  var adformFieldsets = adForm.querySelectorAll('fieldset');
+  var housingType = document.getElementById('housing-type');
+
 
   var createPin = function (offer) {
     var pinOffsetY = 62 / 2 + 22;
@@ -46,18 +45,20 @@
     mapPins.appendChild(fragment);
   };
 
-  var onMainPinClick = function () {
-    map.classList.remove('map--faded');
-    adForm.classList.remove('ad-form--disabled');
-    address.value = getMainSmallPinLocation(mapPinMainSmall);
-    window.form.setFieldsEnabled(adformFieldsets, true);
+  var toggleMapEnabled = function (enabled) {
+    if (enabled) {
+      map.classList.remove('map--faded');
+    } else {
+      map.classList.add('map--faded');
+    }
   };
 
-  mapPinMain.addEventListener('keydown', function (evt) {
+  var onMainPinPressEnter = function (evt) {
     if (evt.keyCode === ENTER_KEYCODE) {
-      onMainPinClick();
+      toggleMapEnabled();
+      window.form.toggleFormEnabled();
     }
-  });
+  };
 
   var getMainPinLocation = function (mainPin) {
     var x = Math.round(mainPin.offsetLeft + mainPin.offsetWidth / 2);
@@ -73,32 +74,37 @@
     return x + ', ' + y;
   };
 
-  var showErrorMessage = function () {
-    var template = document.querySelector('#error').content.querySelector('div');
-    var main = document.querySelector('main');
-    var element = template.cloneNode(true);
-    main.appendChild(element);
+  var clearMap = function () {
+    var mapPin = document.querySelectorAll('.map__pin');
+    mapPin.forEach(function (item) {
+      if (item.classList.contains('map__pin--main')) {
+        return;
+      }
+
+      item.remove();
+    });
   };
 
-  var successHandler = function (data) {
-    renderPins(data);
+  var setHousingTypeChangeListener = function (changeListener) {
+    housingType.addEventListener('change', function () {
+      changeListener(housingType.value);
+    });
   };
-
-  var errorHandler = function () {
-    showErrorMessage();
-  };
-
-  window.load(successHandler, errorHandler);
-
-  mapPinMain.addEventListener('mousedown', onMainPinClick);
 
   window.map = {
     map: map,
+    mapWidth: mapWidth,
     mapPinMain: mapPinMain,
-    cardTemplate: cardTemplate,
+    mapPinMainSmall: mapPinMainSmall,
     mapFiltersContainer: mapFiltersContainer,
+
+    createPin: createPin,
+    renderPins: renderPins,
+    toggleMapEnabled: toggleMapEnabled,
+    onMainPinPressEnter: onMainPinPressEnter,
     getMainPinLocation: getMainPinLocation,
     getMainSmallPinLocation: getMainSmallPinLocation,
-    createPin: createPin
+    clearMap: clearMap,
+    setHousingTypeChangeListener: setHousingTypeChangeListener
   };
 })();

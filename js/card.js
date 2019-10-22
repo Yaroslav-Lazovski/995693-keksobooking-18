@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var cardTemplate = document.querySelector('#card').content.querySelector('article');
+
   var createPhoto = function (offer) {
     var photos = [];
     for (var i = 0; i < offer.offer.photos.length; i++) {
@@ -32,7 +34,7 @@
   };
 
   var createAd = function (offer) {
-    var cardElement = window.map.cardTemplate.cloneNode(true);
+    var cardElement = cardTemplate.cloneNode(true);
     cardElement.querySelector('.popup__title').textContent = offer.offer.title;
     cardElement.querySelector('.popup__text--address').textContent = offer.offer.address;
     cardElement.querySelector('.popup__text--price').textContent = offer.offer.price + '₽/ночь';
