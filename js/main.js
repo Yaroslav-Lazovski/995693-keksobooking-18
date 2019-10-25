@@ -2,14 +2,35 @@
 
 (function () {
   var offers = [];
+  var ENTER_KEYCODE = 13;
+  var ESC_KEYCODE = 27;
 
-  window.map.mapPinMain.addEventListener('click', function () {
+
+  var onMainPinAction = function () {
     window.map.toggleMapEnabled(true);
     window.form.toggleFormEnabled(true);
     window.address.value = window.map.getMainSmallPinLocation(window.map.mapPinMainSmall);
+  };
+
+  window.map.mapPinMain.addEventListener('click', function () {
+    onMainPinAction();
   });
 
-  window.map.mapPinMain.addEventListener('keydown', window.map.onMainPinPressEnter);
+  window.map.mapPinMain.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      onMainPinAction();
+    }
+  });
+
+  document.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      window.card.closePopup();
+    }
+  });
+
+  window.card.popupClose.addEventListener('click', function () {
+    window.card.closePopup();
+  });
 
   window.map.setHousingTypeChangeListener(function (type) {
     var offersByType = [];
@@ -18,9 +39,7 @@
         offersByType.push(offer);
       }
     });
-    if (offersByType.length > 5) {
-      offersByType = offersByType.slice(0, 5);
-    }
+    window.utility.setLimitPins(offersByType);
     window.map.clearMap();
     window.map.renderPins(offersByType);
   });

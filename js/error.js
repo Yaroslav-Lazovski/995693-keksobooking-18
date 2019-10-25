@@ -19,4 +19,3 @@
     showErrorMessage: showErrorMessage
   };
 })();
-

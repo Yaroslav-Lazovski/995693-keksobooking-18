@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var ENTER_KEYCODE = 13;
   var map = document.querySelector('.map');
   var mapWidth = map.offsetWidth;
   var mapFiltersContainer = document.querySelector('.map__filters-container');
@@ -53,13 +52,6 @@
     }
   };
 
-  var onMainPinPressEnter = function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
-      toggleMapEnabled();
-      window.form.toggleFormEnabled();
-    }
-  };
-
   var getMainPinLocation = function (mainPin) {
     var x = Math.round(mainPin.offsetLeft + mainPin.offsetWidth / 2);
     var y = Math.round(mainPin.offsetTop + mainPin.offsetHeight / 2);
@@ -101,7 +93,6 @@
     createPin: createPin,
     renderPins: renderPins,
     toggleMapEnabled: toggleMapEnabled,
-    onMainPinPressEnter: onMainPinPressEnter,
     getMainPinLocation: getMainPinLocation,
     getMainSmallPinLocation: getMainSmallPinLocation,
     clearMap: clearMap,
