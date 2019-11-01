@@ -7,6 +7,7 @@
   var mapPinMain = document.querySelector('.map__pin--main');
   var mapPinMainSmall = mapPinMain.querySelector('img');
   var housingType = document.getElementById('housing-type');
+  var mapPins = document.querySelector('.map__pins');
 
 
   var createPin = function (offer) {
@@ -40,7 +41,6 @@
       fragment.appendChild(pin);
     }
 
-    var mapPins = document.querySelector('.map__pins');
     mapPins.appendChild(fragment);
   };
 
@@ -83,6 +83,26 @@
     });
   };
 
+  var setPinClickListener = function (listener) {
+    mapPins.addEventListener('click', function (evt) {
+      var el = evt.target;
+
+      while (el !== null) {
+        if (el.classList.contains('map__pins') ||
+          el.classList.contains('map__pin')) {
+          break;
+        }
+        if (!el.classList.contains('map__pin')) {
+          el = el.parentElement;
+        }
+      }
+
+      if (el !== null && el.classList.contains('map__pin')) {
+        listener(el);
+      }
+    });
+  };
+
   window.map = {
     map: map,
     mapWidth: mapWidth,
@@ -96,6 +116,7 @@
     getMainPinLocation: getMainPinLocation,
     getMainSmallPinLocation: getMainSmallPinLocation,
     clearMap: clearMap,
-    setHousingTypeChangeListener: setHousingTypeChangeListener
+    setHousingTypeChangeListener: setHousingTypeChangeListener,
+    setPinClickListener: setPinClickListener
   };
 })();

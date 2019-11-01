@@ -6,6 +6,11 @@
   var address = document.querySelector('#address');
   var roomNumber = document.getElementById('room_number');
   var capacity = document.getElementById('capacity');
+  var typeOfHouse = document.getElementById('type');
+  var priceOfHouse = document.getElementById('price');
+  var timein = document.getElementById('timein');
+  var timeout = document.getElementById('timeout');
+
 
   var setFieldsEnabled = function (fieldsets, enabled) {
     for (var i = 0; i < fieldsets.length; i++) {
@@ -17,6 +22,7 @@
     }
   };
 
+
   var toggleFormEnabled = function (enabled) {
     if (enabled) {
       adForm.classList.remove('ad-form--disabled');
@@ -25,6 +31,40 @@
     }
     setFieldsEnabled(adformFieldsets, enabled);
   };
+
+
+  var filterHousingType = function () {
+    switch (typeOfHouse.value) {
+      case 'palace':
+        priceOfHouse.setAttribute('placeholder', '10 000');
+        priceOfHouse.setAttribute('min', 10000);
+        break;
+      case 'flat':
+        priceOfHouse.setAttribute('placeholder', '1 000');
+        priceOfHouse.setAttribute('min', 1000);
+        break;
+      case 'house':
+        priceOfHouse.setAttribute('placeholder', '5 000');
+        priceOfHouse.setAttribute('min', 5000);
+        break;
+      case 'bungalo':
+        priceOfHouse.setAttribute('placeholder', '0');
+        priceOfHouse.setAttribute('min', 0);
+        break;
+    }
+    return null;
+  };
+
+
+  var filterCheckinCheckout = function () {
+    timein.addEventListener('change', function () {
+      timeout.selectedIndex = timein.selectedIndex;
+    });
+    timeout.addEventListener('change', function () {
+      timein.selectedIndex = timeout.selectedIndex;
+    });
+  };
+
 
   var filterCapacityOptions = function () {
     var rooms = parseInt(roomNumber.value, 10);
@@ -43,6 +83,12 @@
     }
     suitableCapacity.setAttribute('selected', 'selected');
   };
+
+
+  filterHousingType();
+  typeOfHouse.addEventListener('change', filterHousingType);
+
+  filterCheckinCheckout();
 
   filterCapacityOptions();
   address.value = window.map.getMainPinLocation(window.map.mapPinMain);

@@ -22,16 +22,6 @@
     }
   });
 
-  document.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ESC_KEYCODE) {
-      window.card.closePopup();
-    }
-  });
-
-  window.card.popupClose.addEventListener('click', function () {
-    window.card.closePopup();
-  });
-
   window.map.setHousingTypeChangeListener(function (type) {
     var offersByType = [];
     offers.forEach(function (offer) {
@@ -49,6 +39,47 @@
     if (offers.length > 5) {
       data = data.slice(0, 5);
     }
+
     window.map.renderPins(data);
+
+    window.map.setPinClickListener(function (pin) {
+      var pinTitle = pin.querySelector('img').alt;
+      var offerToShow;
+      var oldPopup = document.querySelector('.popup');
+
+      if (oldPopup) {
+        oldPopup.remove();
+      }
+
+      for (var i = 0; i < offers.length; i++) {
+        var item = offers[i];
+        if (item.offer.title === pinTitle) {
+          offerToShow = item;
+          break;
+        }
+      }
+
+      window.card.showPopup(offerToShow);
+
+      var popupCloseButton = document.querySelector('.popup__close');
+      var popup = document.querySelector('.popup');
+
+      document.addEventListener('keydown', function (evt) {
+        if (evt.keyCode === ESC_KEYCODE) {
+          popup.remove();
+        }
+      });
+
+      popupCloseButton.addEventListener('click', function () {
+        popup.remove();
+      });
+    });
+
+
   }, window.error.showErrorMessage);
+
+
+  window.main = {
+    offers: offers
+  };
 })();
