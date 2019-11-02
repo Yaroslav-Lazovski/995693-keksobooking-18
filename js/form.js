@@ -85,20 +85,17 @@
   };
 
 
-  filterHousingType();
-  typeOfHouse.addEventListener('change', filterHousingType);
-
-  filterCheckinCheckout();
-
-  filterCapacityOptions();
   address.value = window.map.getMainPinLocation(window.map.mapPinMain);
-
-  roomNumber.addEventListener('change', filterCapacityOptions);
   setFieldsEnabled(adformFieldsets, false);
 
   window.form = {
     address: address,
+    typeOfHouse: typeOfHouse,
+    roomNumber: roomNumber,
 
-    toggleFormEnabled: toggleFormEnabled
+    toggleFormEnabled: toggleFormEnabled,
+    filterHousingType: filterHousingType,
+    filterCheckinCheckout: filterCheckinCheckout,
+    filterCapacityOptions: filterCapacityOptions
   };
 })();

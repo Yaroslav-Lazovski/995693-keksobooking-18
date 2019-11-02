@@ -63,13 +63,12 @@
 
 
   var showPopup = function (offer) {
-    var pinPopup = window.card.createPopup(offer);
+    var pinPopup = createPopup(offer);
     window.map.map.insertBefore(pinPopup, window.map.mapFiltersContainer);
   };
 
 
   window.card = {
-    createPopup: createPopup,
     showPopup: showPopup,
   };
 })();

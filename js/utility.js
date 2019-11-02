@@ -14,9 +14,11 @@
   };
 
   var setLimitPins = function (offers) {
+    var slicedOffers = offers;
     if (offers.length > 5) {
-      offers = offers.slice(0, 5);
+      slicedOffers = offers.slice(0, 5);
     }
+    return slicedOffers;
   };
 
   window.utility = {
