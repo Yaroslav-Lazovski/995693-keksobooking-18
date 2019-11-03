@@ -1,13 +1,13 @@
 'use strict';
 
 (function () {
-  var ENTER_KEYCODE = 13;
   var map = document.querySelector('.map');
   var mapWidth = map.offsetWidth;
   var mapFiltersContainer = document.querySelector('.map__filters-container');
   var mapPinMain = document.querySelector('.map__pin--main');
   var mapPinMainSmall = mapPinMain.querySelector('img');
   var housingType = document.getElementById('housing-type');
+  var mapPins = document.querySelector('.map__pins');
 
 
   var createPin = function (offer) {
@@ -41,7 +41,6 @@
       fragment.appendChild(pin);
     }
 
-    var mapPins = document.querySelector('.map__pins');
     mapPins.appendChild(fragment);
   };
 
@@ -50,13 +49,6 @@
       map.classList.remove('map--faded');
     } else {
       map.classList.add('map--faded');
-    }
-  };
-
-  var onMainPinPressEnter = function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
-      toggleMapEnabled();
-      window.form.toggleFormEnabled();
     }
   };
 
@@ -91,6 +83,26 @@
     });
   };
 
+  var setPinClickListener = function (listener) {
+    mapPins.addEventListener('click', function (evt) {
+      var el = evt.target;
+
+      while (el !== null) {
+        if (el.classList.contains('map__pins') ||
+          el.classList.contains('map__pin')) {
+          break;
+        }
+        if (!el.classList.contains('map__pin')) {
+          el = el.parentElement;
+        }
+      }
+
+      if (el !== null && el.classList.contains('map__pin')) {
+        listener(el);
+      }
+    });
+  };
+
   window.map = {
     map: map,
     mapWidth: mapWidth,
@@ -101,10 +113,10 @@
     createPin: createPin,
     renderPins: renderPins,
     toggleMapEnabled: toggleMapEnabled,
-    onMainPinPressEnter: onMainPinPressEnter,
     getMainPinLocation: getMainPinLocation,
     getMainSmallPinLocation: getMainSmallPinLocation,
     clearMap: clearMap,
-    setHousingTypeChangeListener: setHousingTypeChangeListener
+    setHousingTypeChangeListener: setHousingTypeChangeListener,
+    setPinClickListener: setPinClickListener
   };
 })();

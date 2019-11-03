@@ -13,8 +13,17 @@
     return arr[rand];
   };
 
+  var setLimitPins = function (offers) {
+    var slicedOffers = offers;
+    if (offers.length > 5) {
+      slicedOffers = offers.slice(0, 5);
+    }
+    return slicedOffers;
+  };
+
   window.utility = {
     getRandomBetween: getRandomBetween,
-    chooseRandom: chooseRandom
+    chooseRandom: chooseRandom,
+    setLimitPins: setLimitPins
   };
 })();
