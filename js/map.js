@@ -117,6 +117,6 @@
     getMainSmallPinLocation: getMainSmallPinLocation,
     clearMap: clearMap,
     setHousingTypeChangeListener: setHousingTypeChangeListener,
-    setPinClickListener: setPinClickListener
+    setPinClickListener: setPinClickListener,
   };
 })();

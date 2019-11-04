@@ -9,10 +9,47 @@
   var onMainPinAction = function () {
     window.map.toggleMapEnabled(true);
     window.form.toggleFormEnabled(true);
-    window.address.value = window.map.getMainSmallPinLocation(window.map.mapPinMainSmall);
+    window.form.address.value = window.map.getMainSmallPinLocation(window.map.mapPinMainSmall);
   };
 
-  window.map.mapPinMain.addEventListener('click', function () {
+  window.map.mapPinMain.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
+      };
+
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+
+      window.map.mapPinMain.style.top = (window.map.mapPinMain.offsetTop - shift.y) + 'px';
+      window.map.mapPinMain.style.left = (window.map.mapPinMain.offsetLeft - shift.x) + 'px';
+      window.form.address.value = window.map.getMainSmallPinLocation(window.map.mapPinMainSmall);
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+      window.form.address.value = window.map.getMainSmallPinLocation(window.map.mapPinMainSmall);
+    };
+
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+
     onMainPinAction();
   });
 
@@ -20,6 +57,10 @@
     if (evt.keyCode === ENTER_KEYCODE) {
       onMainPinAction();
     }
+  });
+
+  window.map.mapPinMain.addEventListener('click', function () {
+    onMainPinAction();
   });
 
   var onPinCLick = function (pin) {
@@ -66,6 +107,7 @@
     window.map.clearMap();
     window.map.renderPins(offersByType);
   });
+
 
   window.form.typeOfHouse.addEventListener('change', window.form.filterHousingType);
   window.form.roomNumber.addEventListener('change', window.form.filterCapacityOptions);
