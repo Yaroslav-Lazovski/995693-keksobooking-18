@@ -89,6 +89,7 @@
   setFieldsEnabled(adformFieldsets, false);
 
   window.form = {
+    adForm: adForm,
     address: address,
     typeOfHouse: typeOfHouse,
     roomNumber: roomNumber,

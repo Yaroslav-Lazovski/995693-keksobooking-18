@@ -12,7 +12,15 @@
     var element = template.cloneNode(true);
     element.querySelector('.error__message').textContent = message;
     main.appendChild(element);
+
     element.querySelector('.error__button').addEventListener('click', closeErrorMessage);
+    element.addEventListener('click', closeErrorMessage);
+
+    document.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === window.map.ESC_KEYCODE) {
+        closeErrorMessage();
+      }
+    });
   };
 
   window.error = {
