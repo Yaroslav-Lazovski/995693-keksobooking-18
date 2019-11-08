@@ -1,6 +1,10 @@
 'use strict';
 
 (function () {
+  var MAIN_PIN_ARROW_VALUE = 22;
+  var BORDER_TOP_Y_VALUE = 130;
+  var BORDER_BOTTOM_Y_VALUE = 630;
+
   var map = document.querySelector('.map');
   var mapWidth = map.offsetWidth;
   var mapFiltersContainer = document.querySelector('.map__filters-container');
@@ -11,11 +15,6 @@
   var housingType = document.getElementById('housing-type');
   var mapPins = document.querySelector('.map__pins');
 
-  var MAIN_PIN_ARROW_VALUE = 22;
-  var BORDER_TOP_Y_VALUE = 130;
-  var BORDER_BOTTOM_Y_VALUE = 630;
-  var BORDER_LEFT_X_VALUE = -mainPinWidth / 2;
-  var BORDER_RIGHT_X_VALUE = mapWidth - mainPinWidth / 2;
 
   var createPin = function (offer) {
     var pinOffsetY = 62 / 2 + 22;
@@ -114,8 +113,6 @@
     MAIN_PIN_ARROW_VALUE: MAIN_PIN_ARROW_VALUE,
     BORDER_TOP_Y_VALUE: BORDER_TOP_Y_VALUE,
     BORDER_BOTTOM_Y_VALUE: BORDER_BOTTOM_Y_VALUE,
-    BORDER_LEFT_X_VALUE: BORDER_LEFT_X_VALUE,
-    BORDER_RIGHT_X_VALUE: BORDER_RIGHT_X_VALUE,
 
     map: map,
     mapWidth: mapWidth,
