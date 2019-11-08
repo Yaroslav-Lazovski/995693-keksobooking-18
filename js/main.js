@@ -9,7 +9,7 @@
   var onMainPinAction = function () {
     window.map.toggleMapEnabled(true);
     window.form.toggleFormEnabled(true);
-    window.form.address.value = window.map.getMainSmallPinLocation(window.map.mapPinMainSmall);
+    window.form.address.value = window.map.getMainSmallPinLocation(window.map.mapPinMain);
   };
 
   window.map.mapPinMain.addEventListener('mousedown', function (evt) {
@@ -35,7 +35,20 @@
 
       window.map.mapPinMain.style.top = (window.map.mapPinMain.offsetTop - shift.y) + 'px';
       window.map.mapPinMain.style.left = (window.map.mapPinMain.offsetLeft - shift.x) + 'px';
-      window.form.address.value = window.map.getMainSmallPinLocation(window.map.mapPinMainSmall);
+
+      if (window.map.mapPinMain.offsetTop < window.map.BORDER_TOP_Y_VALUE - window.map.mainPinHeight - window.map.MAIN_PIN_ARROW_VALUE) {
+        window.map.mapPinMain.style.top = window.map.BORDER_TOP_Y_VALUE - window.map.mainPinHeight - window.map.MAIN_PIN_ARROW_VALUE + 'px';
+      } else if (window.map.mapPinMain.offsetTop > window.map.BORDER_BOTTOM_Y_VALUE - window.map.mainPinHeight - window.map.MAIN_PIN_ARROW_VALUE) {
+        window.map.mapPinMain.style.top = window.map.BORDER_BOTTOM_Y_VALUE - window.map.mainPinHeight - window.map.MAIN_PIN_ARROW_VALUE + 'px';
+      }
+
+      if (window.map.mapPinMain.offsetLeft < -window.map.mainPinWidth / 2) {
+        window.map.mapPinMain.style.left = -window.map.mainPinWidth / 2 + 'px';
+      } else if (window.map.mapPinMain.offsetLeft > window.map.mapWidth - window.map.mainPinWidth / 2) {
+        window.map.mapPinMain.style.left = window.map.mapWidth - window.map.mainPinWidth / 2 + 'px';
+      }
+
+      window.form.address.value = window.map.getMainSmallPinLocation(window.map.mapPinMain);
     };
 
     var onMouseUp = function (upEvt) {
@@ -43,7 +56,7 @@
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
-      window.form.address.value = window.map.getMainSmallPinLocation(window.map.mapPinMainSmall);
+      window.form.address.value = window.map.getMainSmallPinLocation(window.map.mapPinMain);
     };
 
 
