@@ -9,6 +9,7 @@
 
   var map = document.querySelector('.map');
   var mapWidth = map.offsetWidth;
+  var mapHeight = map.offsetHeight;
   var mapFiltersContainer = document.querySelector('.map__filters-container');
   var mapPinMain = document.querySelector('.map__pin--main');
   var mapPinMainSmall = mapPinMain.querySelector('img');
@@ -58,6 +59,10 @@
     } else {
       map.classList.add('map--faded');
     }
+  };
+
+  var toggleMapDisabled = function () {
+    map.classList.add('map--faded');
   };
 
   var getMainPinLocation = function (mainPin) {
@@ -120,6 +125,7 @@
 
     map: map,
     mapWidth: mapWidth,
+    mapHeight: mapHeight,
     mapPinMain: mapPinMain,
     mapPinMainSmall: mapPinMainSmall,
     mainPinWidth: mainPinWidth,
@@ -129,6 +135,7 @@
     createPin: createPin,
     renderPins: renderPins,
     toggleMapEnabled: toggleMapEnabled,
+    toggleMapDisabled: toggleMapDisabled,
     getMainPinLocation: getMainPinLocation,
     getMainSmallPinLocation: getMainSmallPinLocation,
     clearMap: clearMap,

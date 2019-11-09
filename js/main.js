@@ -131,6 +131,18 @@
   window.form.adForm.addEventListener('submit', function (evt) {
     window.upload(new FormData(window.form.adForm), window.success.showSuccessMessage);
     evt.preventDefault();
+
+    window.form.formReset();
+
+    window.map.mapPinMain.style.top = window.map.mapHeight / 2 + 'px';
+    window.map.mapPinMain.style.left = window.map.mapWidth / 2 + 'px';
+
+    window.map.toggleMapDisabled();
+    window.form.toggleFormDisabled();
+
+    document.querySelector('.popup').remove();
+
+    setTimeout(window.form.address.value = window.map.getMainSmallPinLocation(window.map.mapPinMain), 1000);
   });
 
 
