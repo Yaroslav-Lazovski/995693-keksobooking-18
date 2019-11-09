@@ -1,12 +1,15 @@
 'use strict';
 
 (function () {
+  var ENTER_KEYCODE = 13;
+  var ESC_KEYCODE = 27;
   var MAIN_PIN_ARROW_VALUE = 22;
   var BORDER_TOP_Y_VALUE = 130;
   var BORDER_BOTTOM_Y_VALUE = 630;
 
   var map = document.querySelector('.map');
   var mapWidth = map.offsetWidth;
+  var mapHeight = map.offsetHeight;
   var mapFiltersContainer = document.querySelector('.map__filters-container');
   var mapPinMain = document.querySelector('.map__pin--main');
   var mapPinMainSmall = mapPinMain.querySelector('img');
@@ -56,6 +59,10 @@
     } else {
       map.classList.add('map--faded');
     }
+  };
+
+  var toggleMapDisabled = function () {
+    map.classList.add('map--faded');
   };
 
   var getMainPinLocation = function (mainPin) {
@@ -110,12 +117,15 @@
   };
 
   window.map = {
+    ENTER_KEYCODE: ENTER_KEYCODE,
+    ESC_KEYCODE: ESC_KEYCODE,
     MAIN_PIN_ARROW_VALUE: MAIN_PIN_ARROW_VALUE,
     BORDER_TOP_Y_VALUE: BORDER_TOP_Y_VALUE,
     BORDER_BOTTOM_Y_VALUE: BORDER_BOTTOM_Y_VALUE,
 
     map: map,
     mapWidth: mapWidth,
+    mapHeight: mapHeight,
     mapPinMain: mapPinMain,
     mapPinMainSmall: mapPinMainSmall,
     mainPinWidth: mainPinWidth,
@@ -125,6 +135,7 @@
     createPin: createPin,
     renderPins: renderPins,
     toggleMapEnabled: toggleMapEnabled,
+    toggleMapDisabled: toggleMapDisabled,
     getMainPinLocation: getMainPinLocation,
     getMainSmallPinLocation: getMainSmallPinLocation,
     clearMap: clearMap,

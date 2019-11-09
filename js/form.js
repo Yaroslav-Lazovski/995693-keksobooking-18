@@ -10,6 +10,7 @@
   var priceOfHouse = document.getElementById('price');
   var timein = document.getElementById('timein');
   var timeout = document.getElementById('timeout');
+  var resetButton = document.querySelector('.ad-form__reset');
 
 
   var setFieldsEnabled = function (fieldsets, enabled) {
@@ -22,7 +23,6 @@
     }
   };
 
-
   var toggleFormEnabled = function (enabled) {
     if (enabled) {
       adForm.classList.remove('ad-form--disabled');
@@ -30,6 +30,11 @@
       adForm.classList.add('ad-form--disabled');
     }
     setFieldsEnabled(adformFieldsets, enabled);
+  };
+
+  var toggleFormDisabled = function (disabled) {
+    adForm.classList.add('ad-form--disabled');
+    setFieldsEnabled(adformFieldsets, disabled);
   };
 
 
@@ -84,18 +89,25 @@
     suitableCapacity.setAttribute('selected', 'selected');
   };
 
+  var formReset = function () {
+    resetButton.click();
+  };
+
 
   address.value = window.map.getMainPinLocation(window.map.mapPinMain);
   setFieldsEnabled(adformFieldsets, false);
 
   window.form = {
+    adForm: adForm,
     address: address,
     typeOfHouse: typeOfHouse,
     roomNumber: roomNumber,
 
     toggleFormEnabled: toggleFormEnabled,
+    toggleFormDisabled: toggleFormDisabled,
     filterHousingType: filterHousingType,
     filterCheckinCheckout: filterCheckinCheckout,
-    filterCapacityOptions: filterCapacityOptions
+    filterCapacityOptions: filterCapacityOptions,
+    formReset: formReset
   };
 })();

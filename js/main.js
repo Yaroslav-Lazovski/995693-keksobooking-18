@@ -2,8 +2,6 @@
 
 (function () {
   var offers = [];
-  var ENTER_KEYCODE = 13;
-  var ESC_KEYCODE = 27;
 
 
   var onMainPinAction = function () {
@@ -67,7 +65,7 @@
   });
 
   window.map.mapPinMain.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
+    if (evt.keyCode === window.map.ENTER_KEYCODE) {
       onMainPinAction();
     }
   });
@@ -99,7 +97,7 @@
     var popup = document.querySelector('.popup');
 
     document.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === ESC_KEYCODE) {
+      if (evt.keyCode === window.map.ESC_KEYCODE) {
         popup.remove();
       }
     });
@@ -128,6 +126,24 @@
   window.form.filterHousingType();
   window.form.filterCheckinCheckout();
   window.form.filterCapacityOptions();
+
+
+  window.form.adForm.addEventListener('submit', function (evt) {
+    window.upload(new FormData(window.form.adForm), window.success.showSuccessMessage);
+    evt.preventDefault();
+
+    window.form.formReset();
+
+    window.map.mapPinMain.style.top = window.map.mapHeight / 2 + 'px';
+    window.map.mapPinMain.style.left = window.map.mapWidth / 2 + 'px';
+
+    window.map.toggleMapDisabled();
+    window.form.toggleFormDisabled();
+
+    document.querySelector('.popup').remove();
+
+    setTimeout(window.form.address.value = window.map.getMainSmallPinLocation(window.map.mapPinMain), 1000);
+  });
 
 
   window.load(function (data) {
