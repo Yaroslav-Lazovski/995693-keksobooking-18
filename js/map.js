@@ -8,6 +8,7 @@
   var BORDER_BOTTOM_Y_VALUE = 630;
 
   var map = document.querySelector('.map');
+  var mapPins = document.querySelector('.map__pins');
   var mapWidth = map.offsetWidth;
   var mapHeight = map.offsetHeight;
   var mapFiltersContainer = document.querySelector('.map__filters-container');
@@ -16,7 +17,10 @@
   var mainPinWidth = mapPinMain.offsetWidth;
   var mainPinHeight = mapPinMain.offsetHeight;
   var housingType = document.getElementById('housing-type');
-  var mapPins = document.querySelector('.map__pins');
+  var housingPrice = document.getElementById('housing-price');
+  var housingRooms = document.getElementById('housing-rooms');
+  var housingGuests = document.getElementById('housing-guests');
+  var housingFeatures = document.getElementById('housing-features');
 
 
   var createPin = function (offer) {
@@ -96,6 +100,30 @@
     });
   };
 
+  var setHousingPriceChangeListener = function (changeListener) {
+    housingPrice.addEventListener('change', function () {
+      changeListener(housingPrice.value);
+    });
+  };
+
+  var setHousingRoomsChangeListener = function (changeListener) {
+    housingRooms.addEventListener('change', function () {
+      changeListener(housingRooms.value);
+    });
+  };
+
+  var setHousingGuestsChangeListener = function (changeListener) {
+    housingGuests.addEventListener('change', function () {
+      changeListener(housingGuests.value);
+    });
+  };
+
+  var setHousingFeaturesChangeListener = function (changeListener) {
+    housingFeatures.addEventListener('change', function () {
+      changeListener(housingFeatures.value);
+    });
+  };
+
   var setPinClickListener = function (listener) {
     mapPins.addEventListener('click', function (evt) {
       var el = evt.target;
@@ -110,7 +138,7 @@
         }
       }
 
-      if (el !== null && el.classList.contains('map__pin')) {
+      if (el !== null && el.classList.contains('map__pin') && !el.classList.contains('map__pin--main')) {
         listener(el);
       }
     });
@@ -140,6 +168,10 @@
     getMainSmallPinLocation: getMainSmallPinLocation,
     clearMap: clearMap,
     setHousingTypeChangeListener: setHousingTypeChangeListener,
+    setHousingPriceChangeListener: setHousingPriceChangeListener,
+    setHousingRoomsChangeListener: setHousingRoomsChangeListener,
+    setHousingGuestsChangeListener: setHousingGuestsChangeListener,
+    setHousingFeaturesChangeListener: setHousingFeaturesChangeListener,
     setPinClickListener: setPinClickListener,
   };
 })();

@@ -119,6 +119,48 @@
     window.map.renderPins(offersByType);
   });
 
+  window.map.setHousingPriceChangeListener(function () {
+    var offersByType = [];
+    offers.forEach(function (offer) {
+      if (offer.offer.price >= 50000) {
+        offersByType.push(offer);
+      } else if (offer.offer.price <= 50000 && offer.offer.price >= 10000) {
+        offersByType = [];
+        offersByType.push(offer);
+      } else if (offer.offer.price <= 10000) {
+        offersByType = [];
+        offersByType.push(offer);
+      }
+    });
+    window.utility.setLimitPins(offersByType);
+    window.map.clearMap();
+    window.map.renderPins(offersByType);
+  });
+
+  window.map.setHousingRoomsChangeListener(function (rooms) {
+    var offersByType = [];
+    offers.forEach(function (offer) {
+      if (offer.offer.rooms === parseFloat(rooms)) {
+        offersByType.push(offer);
+      }
+    });
+    window.utility.setLimitPins(offersByType);
+    window.map.clearMap();
+    window.map.renderPins(offersByType);
+  });
+
+  window.map.setHousingGuestsChangeListener(function (guests) {
+    var offersByType = [];
+    offers.forEach(function (offer) {
+      if (offer.offer.guests === parseFloat(guests)) {
+        offersByType.push(offer);
+      }
+    });
+    window.utility.setLimitPins(offersByType);
+    window.map.clearMap();
+    window.map.renderPins(offersByType);
+  });
+
 
   window.form.typeOfHouse.addEventListener('change', window.form.filterHousingType);
   window.form.roomNumber.addEventListener('change', window.form.filterCapacityOptions);
@@ -140,9 +182,12 @@
     window.map.toggleMapDisabled();
     window.form.toggleFormDisabled();
 
-    document.querySelector('.popup').remove();
+    if (document.querySelector('.popup')) {
+      document.querySelector('.popup').remove();
+    }
 
     setTimeout(window.form.address.value = window.map.getMainSmallPinLocation(window.map.mapPinMain), 1000);
+    document.getElementById('price').setAttribute('placeholder', '1 000');
   });
 
 
