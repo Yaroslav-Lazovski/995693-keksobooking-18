@@ -21,6 +21,7 @@
   var housingRooms = document.getElementById('housing-rooms');
   var housingGuests = document.getElementById('housing-guests');
   var housingFeatures = document.getElementById('housing-features');
+  var mapCheckbox = housingFeatures.querySelectorAll('.map__checkbox');
 
 
   var createPin = function (offer) {
@@ -94,35 +95,6 @@
     });
   };
 
-  var setHousingTypeChangeListener = function (changeListener) {
-    housingType.addEventListener('change', function () {
-      changeListener(housingType.value);
-    });
-  };
-
-  var setHousingPriceChangeListener = function (changeListener) {
-    housingPrice.addEventListener('change', function () {
-      changeListener(housingPrice.value);
-    });
-  };
-
-  var setHousingRoomsChangeListener = function (changeListener) {
-    housingRooms.addEventListener('change', function () {
-      changeListener(housingRooms.value);
-    });
-  };
-
-  var setHousingGuestsChangeListener = function (changeListener) {
-    housingGuests.addEventListener('change', function () {
-      changeListener(housingGuests.value);
-    });
-  };
-
-  var setHousingFeaturesChangeListener = function (changeListener) {
-    housingFeatures.addEventListener('change', function () {
-      changeListener(housingFeatures.value);
-    });
-  };
 
   var setPinClickListener = function (listener) {
     mapPins.addEventListener('click', function (evt) {
@@ -143,6 +115,89 @@
       }
     });
   };
+
+
+  var setFiltersChangedListener = function (listener) {
+    housingType.addEventListener('change', listener);
+    housingPrice.addEventListener('change', listener);
+    housingRooms.addEventListener('change', listener);
+    housingGuests.addEventListener('change', listener);
+    housingFeatures.addEventListener('change', listener);
+  };
+
+  var isOfferSuitable = function (offer) {
+    return isTypeSuitable(offer) &&
+      isPriceSuitable(offer) &&
+      isRoomsSuitable(offer) &&
+      isGuestsSuitable(offer) &&
+      areFeaturesSuitable(offer);
+  };
+
+  var isTypeSuitable = function (offer) {
+    var selectedType = housingType.value;
+
+    return selectedType === 'any' ||
+      selectedType === offer.offer.type;
+  };
+
+  var isPriceSuitable = function (offer) {
+    var selectedPrice = housingPrice.value;
+
+    if (offer.offer.price <= 10000) {
+      offer.offer.price = 'low';
+    } else if (offer.offer.price >= 10000 && offer.offer.price <= 50000) {
+      offer.offer.price = 'middle';
+    } else if (offer.offer.price >= 50000) {
+      offer.offer.price = 'high';
+    }
+
+    return selectedPrice === 'any' ||
+      selectedPrice === offer.offer.price;
+  };
+
+  var isRoomsSuitable = function (offer) {
+    var selectedRooms = housingRooms.value;
+
+    return selectedRooms === 'any' ||
+      parseInt(selectedRooms, 10) === offer.offer.rooms;
+  };
+
+  var isGuestsSuitable = function (offer) {
+    var selectedGuests = housingGuests.value;
+
+    return selectedGuests === 'any' ||
+      parseInt(selectedGuests, 10) === offer.offer.guests;
+  };
+
+
+  var areFeaturesSuitable = function (offer) {
+    // collectSelectedFeatures - функция, которая проходит по всем инпутам
+    // с фичами и возвращает в виде массива
+    var collectSelectedFeatures = function () {
+      var arr = [];
+      for (var i = 0; i < mapCheckbox.length; i++) {
+        if (mapCheckbox[i].checked) {
+          arr.push(mapCheckbox[i]);
+        }
+      }
+      return arr;
+    };
+
+    var selectedFeatures = collectSelectedFeatures();
+
+    for (var i = 0; i < selectedFeatures.length; i++) {
+      var feature = selectedFeatures[i];
+
+      // если хоть одной из выбранных фич нет - считаем, что не подходит
+      if (offer.offer.features.includes(feature)) {
+        return false;
+      }
+    }
+
+    // если всё есть, то всё ок
+    return true;
+  };
+
 
   window.map = {
     ENTER_KEYCODE: ENTER_KEYCODE,
@@ -167,11 +222,8 @@
     getMainPinLocation: getMainPinLocation,
     getMainSmallPinLocation: getMainSmallPinLocation,
     clearMap: clearMap,
-    setHousingTypeChangeListener: setHousingTypeChangeListener,
-    setHousingPriceChangeListener: setHousingPriceChangeListener,
-    setHousingRoomsChangeListener: setHousingRoomsChangeListener,
-    setHousingGuestsChangeListener: setHousingGuestsChangeListener,
-    setHousingFeaturesChangeListener: setHousingFeaturesChangeListener,
+    setFiltersChangedListener: setFiltersChangedListener,
+    isOfferSuitable: isOfferSuitable,
     setPinClickListener: setPinClickListener,
   };
 })();

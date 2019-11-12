@@ -107,58 +107,20 @@
     });
   };
 
-  window.map.setHousingTypeChangeListener(function (type) {
-    var offersByType = [];
-    offers.forEach(function (offer) {
-      if (offer.offer.type === type) {
-        offersByType.push(offer);
-      }
-    });
-    window.utility.setLimitPins(offersByType);
-    window.map.clearMap();
-    window.map.renderPins(offersByType);
-  });
 
-  window.map.setHousingPriceChangeListener(function () {
-    var offersByType = [];
-    offers.forEach(function (offer) {
-      if (offer.offer.price >= 50000) {
-        offersByType.push(offer);
-      } else if (offer.offer.price <= 50000 && offer.offer.price >= 10000) {
-        offersByType = [];
-        offersByType.push(offer);
-      } else if (offer.offer.price <= 10000) {
-        offersByType = [];
-        offersByType.push(offer);
-      }
-    });
-    window.utility.setLimitPins(offersByType);
-    window.map.clearMap();
-    window.map.renderPins(offersByType);
-  });
+  window.map.setFiltersChangedListener(function () {
+    var filtered = [];
 
-  window.map.setHousingRoomsChangeListener(function (rooms) {
-    var offersByType = [];
-    offers.forEach(function (offer) {
-      if (offer.offer.rooms === parseFloat(rooms)) {
-        offersByType.push(offer);
+    for (var i = 0; i < offers.length; i++) {
+      var offer = offers[i];
+      if (window.map.isOfferSuitable(offer)) {
+        filtered.push(offer);
       }
-    });
-    window.utility.setLimitPins(offersByType);
-    window.map.clearMap();
-    window.map.renderPins(offersByType);
-  });
+    }
 
-  window.map.setHousingGuestsChangeListener(function (guests) {
-    var offersByType = [];
-    offers.forEach(function (offer) {
-      if (offer.offer.guests === parseFloat(guests)) {
-        offersByType.push(offer);
-      }
-    });
-    window.utility.setLimitPins(offersByType);
+    window.utility.setLimitPins(filtered);
     window.map.clearMap();
-    window.map.renderPins(offersByType);
+    window.map.renderPins(filtered);
   });
 
 
