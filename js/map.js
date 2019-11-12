@@ -118,11 +118,11 @@
 
 
   var setFiltersChangedListener = function (listener) {
-    housingType.addEventListener('change', listener);
-    housingPrice.addEventListener('change', listener);
-    housingRooms.addEventListener('change', listener);
-    housingGuests.addEventListener('change', listener);
-    housingFeatures.addEventListener('change', listener);
+    housingType.addEventListener('change', window.debounce(listener));
+    housingPrice.addEventListener('change', window.debounce(listener));
+    housingRooms.addEventListener('change', window.debounce(listener));
+    housingGuests.addEventListener('change', window.debounce(listener));
+    housingFeatures.addEventListener('change', window.debounce(listener));
   };
 
   var isOfferSuitable = function (offer) {
@@ -143,12 +143,12 @@
   var isPriceSuitable = function (offer) {
     var selectedPrice = housingPrice.value;
 
-    if (offer.offer.price <= 10000) {
-      offer.offer.price = 'low';
-    } else if (offer.offer.price >= 10000 && offer.offer.price <= 50000) {
-      offer.offer.price = 'middle';
-    } else if (offer.offer.price >= 50000) {
-      offer.offer.price = 'high';
+    if (selectedPrice === 'low' && offer.offer.price <= 10000) {
+      selectedPrice = offer.offer.price;
+    } else if (selectedPrice === 'middle' && (offer.offer.price >= 10000 && offer.offer.price <= 50000)) {
+      selectedPrice = offer.offer.price;
+    } else if (selectedPrice === 'high' && offer.offer.price >= 50000) {
+      selectedPrice = offer.offer.price;
     }
 
     return selectedPrice === 'any' ||
@@ -169,32 +169,27 @@
       parseInt(selectedGuests, 10) === offer.offer.guests;
   };
 
+  var collectSelectedFeatures = function () {
+    var arr = [];
+    for (var i = 0; i < mapCheckbox.length; i++) {
+      if (mapCheckbox[i].checked) {
+        arr.push(mapCheckbox[i].value);
+      }
+    }
+    return arr;
+  };
 
   var areFeaturesSuitable = function (offer) {
-    // collectSelectedFeatures - функция, которая проходит по всем инпутам
-    // с фичами и возвращает в виде массива
-    var collectSelectedFeatures = function () {
-      var arr = [];
-      for (var i = 0; i < mapCheckbox.length; i++) {
-        if (mapCheckbox[i].checked) {
-          arr.push(mapCheckbox[i]);
-        }
-      }
-      return arr;
-    };
-
     var selectedFeatures = collectSelectedFeatures();
 
     for (var i = 0; i < selectedFeatures.length; i++) {
       var feature = selectedFeatures[i];
 
-      // если хоть одной из выбранных фич нет - считаем, что не подходит
-      if (offer.offer.features.includes(feature)) {
+      if (!offer.offer.features.includes(feature)) {
         return false;
       }
     }
 
-    // если всё есть, то всё ок
     return true;
   };
 

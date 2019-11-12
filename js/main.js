@@ -118,7 +118,8 @@
       }
     }
 
-    window.utility.setLimitPins(filtered);
+    filtered = window.utility.setLimitPins(filtered);
+
     window.map.clearMap();
     window.map.renderPins(filtered);
   });
