@@ -5,6 +5,7 @@
   var adformFieldsets = adForm.querySelectorAll('fieldset');
   var address = document.querySelector('#address');
   var roomNumber = document.getElementById('room_number');
+  var title = document.getElementById('title');
   var capacity = document.getElementById('capacity');
   var typeOfHouse = document.getElementById('type');
   var priceOfHouse = document.getElementById('price');
@@ -93,6 +94,14 @@
     resetButton.click();
   };
 
+  title.addEventListener('invalid', function (evt) {
+    evt.currentTarget.style.border = '3px solid #DD2C00';
+  });
+
+  priceOfHouse.addEventListener('invalid', function (evt) {
+    evt.currentTarget.style.border = '3px solid #DD2C00';
+  });
+
 
   address.value = window.map.getMainPinLocation(window.map.mapPinMain);
   setFieldsEnabled(adformFieldsets, false);
@@ -102,6 +111,7 @@
     address: address,
     typeOfHouse: typeOfHouse,
     roomNumber: roomNumber,
+    resetButton: resetButton,
 
     toggleFormEnabled: toggleFormEnabled,
     toggleFormDisabled: toggleFormDisabled,

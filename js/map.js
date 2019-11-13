@@ -8,6 +8,7 @@
   var BORDER_BOTTOM_Y_VALUE = 630;
 
   var map = document.querySelector('.map');
+  var mapPins = document.querySelector('.map__pins');
   var mapWidth = map.offsetWidth;
   var mapHeight = map.offsetHeight;
   var mapFiltersContainer = document.querySelector('.map__filters-container');
@@ -15,8 +16,13 @@
   var mapPinMainSmall = mapPinMain.querySelector('img');
   var mainPinWidth = mapPinMain.offsetWidth;
   var mainPinHeight = mapPinMain.offsetHeight;
+  var filters = document.querySelectorAll('.map__filter');
   var housingType = document.getElementById('housing-type');
-  var mapPins = document.querySelector('.map__pins');
+  var housingPrice = document.getElementById('housing-price');
+  var housingRooms = document.getElementById('housing-rooms');
+  var housingGuests = document.getElementById('housing-guests');
+  var housingFeatures = document.getElementById('housing-features');
+  var mapCheckbox = housingFeatures.querySelectorAll('.map__checkbox');
 
 
   var createPin = function (offer) {
@@ -52,6 +58,7 @@
 
     mapPins.appendChild(fragment);
   };
+
 
   var toggleMapEnabled = function (enabled) {
     if (enabled) {
@@ -90,11 +97,6 @@
     });
   };
 
-  var setHousingTypeChangeListener = function (changeListener) {
-    housingType.addEventListener('change', function () {
-      changeListener(housingType.value);
-    });
-  };
 
   var setPinClickListener = function (listener) {
     mapPins.addEventListener('click', function (evt) {
@@ -110,11 +112,102 @@
         }
       }
 
-      if (el !== null && el.classList.contains('map__pin')) {
+      if (el !== null && el.classList.contains('map__pin') && !el.classList.contains('map__pin--main')) {
         listener(el);
       }
     });
   };
+
+
+  var setFiltersChangedListener = function (listener) {
+    housingType.addEventListener('change', window.debounce(listener));
+    housingPrice.addEventListener('change', window.debounce(listener));
+    housingRooms.addEventListener('change', window.debounce(listener));
+    housingGuests.addEventListener('change', window.debounce(listener));
+    housingFeatures.addEventListener('change', window.debounce(listener));
+  };
+
+  var isOfferSuitable = function (offer) {
+    return isTypeSuitable(offer) &&
+      isPriceSuitable(offer) &&
+      isRoomsSuitable(offer) &&
+      isGuestsSuitable(offer) &&
+      areFeaturesSuitable(offer);
+  };
+
+  var isTypeSuitable = function (offer) {
+    var selectedType = housingType.value;
+
+    return selectedType === 'any' ||
+      selectedType === offer.offer.type;
+  };
+
+  var isPriceSuitable = function (offer) {
+    var selectedPrice = housingPrice.value;
+
+    if (selectedPrice === 'low' && offer.offer.price <= 10000) {
+      selectedPrice = offer.offer.price;
+    } else if (selectedPrice === 'middle' && (offer.offer.price >= 10000 && offer.offer.price <= 50000)) {
+      selectedPrice = offer.offer.price;
+    } else if (selectedPrice === 'high' && offer.offer.price >= 50000) {
+      selectedPrice = offer.offer.price;
+    }
+
+    return selectedPrice === 'any' ||
+      selectedPrice === offer.offer.price;
+  };
+
+  var isRoomsSuitable = function (offer) {
+    var selectedRooms = housingRooms.value;
+
+    return selectedRooms === 'any' ||
+      parseInt(selectedRooms, 10) === offer.offer.rooms;
+  };
+
+  var isGuestsSuitable = function (offer) {
+    var selectedGuests = housingGuests.value;
+
+    return selectedGuests === 'any' ||
+      parseInt(selectedGuests, 10) === offer.offer.guests;
+  };
+
+  var collectSelectedFeatures = function () {
+    var arr = [];
+    for (var i = 0; i < mapCheckbox.length; i++) {
+      if (mapCheckbox[i].checked) {
+        arr.push(mapCheckbox[i].value);
+      }
+    }
+    return arr;
+  };
+
+  var areFeaturesSuitable = function (offer) {
+    var selectedFeatures = collectSelectedFeatures();
+
+    for (var i = 0; i < selectedFeatures.length; i++) {
+      var feature = selectedFeatures[i];
+
+      if (!offer.offer.features.includes(feature)) {
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+
+  var resetFilters = function () {
+    for (var i = 0; i < filters.length; i++) {
+      filters[i].value = 'any';
+    }
+  };
+
+  var resetFeatures = function () {
+    for (var i = 0; i < mapCheckbox.length; i++) {
+      mapCheckbox[i].checked = false;
+    }
+  };
+
 
   window.map = {
     ENTER_KEYCODE: ENTER_KEYCODE,
@@ -139,7 +232,10 @@
     getMainPinLocation: getMainPinLocation,
     getMainSmallPinLocation: getMainSmallPinLocation,
     clearMap: clearMap,
-    setHousingTypeChangeListener: setHousingTypeChangeListener,
+    setFiltersChangedListener: setFiltersChangedListener,
+    isOfferSuitable: isOfferSuitable,
     setPinClickListener: setPinClickListener,
+    resetFilters: resetFilters,
+    resetFeatures: resetFeatures
   };
 })();

@@ -107,16 +107,21 @@
     });
   };
 
-  window.map.setHousingTypeChangeListener(function (type) {
-    var offersByType = [];
-    offers.forEach(function (offer) {
-      if (offer.offer.type === type) {
-        offersByType.push(offer);
+
+  window.map.setFiltersChangedListener(function () {
+    var filtered = [];
+
+    for (var i = 0; i < offers.length; i++) {
+      var offer = offers[i];
+      if (window.map.isOfferSuitable(offer)) {
+        filtered.push(offer);
       }
-    });
-    window.utility.setLimitPins(offersByType);
+    }
+
+    filtered = window.utility.setLimitPins(filtered);
+
     window.map.clearMap();
-    window.map.renderPins(offersByType);
+    window.map.renderPins(filtered);
   });
 
 
@@ -140,9 +145,22 @@
     window.map.toggleMapDisabled();
     window.form.toggleFormDisabled();
 
-    document.querySelector('.popup').remove();
+    if (document.querySelector('.popup')) {
+      document.querySelector('.popup').remove();
+    }
+
+    var pins = document.querySelectorAll('.map__pin');
+    for (var i = 0; i < pins.length; i++) {
+      if (!pins[i].classList.contains('map__pin--main')) {
+        pins[i].remove();
+      }
+    }
+
+    window.map.resetFilters();
+    window.map.resetFeatures();
 
     setTimeout(window.form.address.value = window.map.getMainSmallPinLocation(window.map.mapPinMain), 1000);
+    document.getElementById('price').setAttribute('placeholder', '1 000');
   });
 
 
@@ -152,7 +170,9 @@
       data = data.slice(0, 5);
     }
 
-    window.map.renderPins(data);
+    window.map.mapPinMain.addEventListener('mousedown', function () {
+      window.map.renderPins(data);
+    });
 
     window.map.setPinClickListener(onPinCLick);
 
