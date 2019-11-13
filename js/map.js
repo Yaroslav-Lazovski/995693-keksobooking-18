@@ -16,6 +16,7 @@
   var mapPinMainSmall = mapPinMain.querySelector('img');
   var mainPinWidth = mapPinMain.offsetWidth;
   var mainPinHeight = mapPinMain.offsetHeight;
+  var filters = document.querySelectorAll('.map__filter');
   var housingType = document.getElementById('housing-type');
   var housingPrice = document.getElementById('housing-price');
   var housingRooms = document.getElementById('housing-rooms');
@@ -57,6 +58,7 @@
 
     mapPins.appendChild(fragment);
   };
+
 
   var toggleMapEnabled = function (enabled) {
     if (enabled) {
@@ -194,6 +196,19 @@
   };
 
 
+  var resetFilters = function () {
+    for (var i = 0; i < filters.length; i++) {
+      filters[i].value = 'any';
+    }
+  };
+
+  var resetFeatures = function () {
+    for (var i = 0; i < mapCheckbox.length; i++) {
+      mapCheckbox[i].checked = false;
+    }
+  };
+
+
   window.map = {
     ENTER_KEYCODE: ENTER_KEYCODE,
     ESC_KEYCODE: ESC_KEYCODE,
@@ -220,5 +235,7 @@
     setFiltersChangedListener: setFiltersChangedListener,
     isOfferSuitable: isOfferSuitable,
     setPinClickListener: setPinClickListener,
+    resetFilters: resetFilters,
+    resetFeatures: resetFeatures
   };
 })();
