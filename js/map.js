@@ -202,7 +202,7 @@
     }
   };
 
-  var resetFeatures = function () {
+  var resetMapFeatures = function () {
     for (var i = 0; i < mapCheckbox.length; i++) {
       mapCheckbox[i].checked = false;
     }
@@ -236,6 +236,6 @@
     isOfferSuitable: isOfferSuitable,
     setPinClickListener: setPinClickListener,
     resetFilters: resetFilters,
-    resetFeatures: resetFeatures
+    resetMapFeatures: resetMapFeatures
   };
 })();

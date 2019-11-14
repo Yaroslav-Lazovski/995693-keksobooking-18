@@ -4,13 +4,14 @@
   var adForm = document.querySelector('.ad-form');
   var adformFieldsets = adForm.querySelectorAll('fieldset');
   var address = document.querySelector('#address');
-  var roomNumber = document.getElementById('room_number');
   var title = document.getElementById('title');
-  var capacity = document.getElementById('capacity');
   var typeOfHouse = document.getElementById('type');
   var priceOfHouse = document.getElementById('price');
   var timein = document.getElementById('timein');
   var timeout = document.getElementById('timeout');
+  var roomNumber = document.getElementById('room_number');
+  var capacity = document.getElementById('capacity');
+  var formFeatures = document.querySelectorAll('.feature__checkbox');
   var resetButton = document.querySelector('.ad-form__reset');
 
 
@@ -90,9 +91,12 @@
     suitableCapacity.setAttribute('selected', 'selected');
   };
 
-  var formReset = function () {
-    resetButton.click();
+  var resetFormFeatures = function () {
+    for (var i = 0; i < formFeatures.length; i++) {
+      formFeatures[i].checked = false;
+    }
   };
+
 
   title.addEventListener('invalid', function (evt) {
     evt.currentTarget.style.border = '3px solid #DD2C00';
@@ -109,8 +113,13 @@
   window.form = {
     adForm: adForm,
     address: address,
+    title: title,
     typeOfHouse: typeOfHouse,
+    priceOfHouse: priceOfHouse,
+    timein: timein,
+    timeout: timeout,
     roomNumber: roomNumber,
+    capacity: capacity,
     resetButton: resetButton,
 
     toggleFormEnabled: toggleFormEnabled,
@@ -118,6 +127,6 @@
     filterHousingType: filterHousingType,
     filterCheckinCheckout: filterCheckinCheckout,
     filterCapacityOptions: filterCapacityOptions,
-    formReset: formReset
+    resetFormFeatures: resetFormFeatures,
   };
 })();
