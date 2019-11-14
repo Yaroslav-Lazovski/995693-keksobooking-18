@@ -78,6 +78,14 @@
     var pinTitle = pin.querySelector('img').alt;
     var offerToShow;
     var oldPopup = document.querySelector('.popup');
+    var activePin = document.querySelector('.map__pin--active');
+
+    pin.classList.add('map__pin--active');
+
+    if (activePin) {
+      activePin.classList.remove('map__pin--active');
+    }
+
 
     if (oldPopup) {
       oldPopup.remove();
@@ -120,6 +128,7 @@
 
     filtered = window.utility.setLimitPins(filtered);
 
+    document.querySelector('.popup').remove();
     window.map.clearMap();
     window.map.renderPins(filtered);
   });
