@@ -78,6 +78,14 @@
     var pinTitle = pin.querySelector('img').alt;
     var offerToShow;
     var oldPopup = document.querySelector('.popup');
+    var activePin = document.querySelector('.map__pin--active');
+
+    pin.classList.add('map__pin--active');
+
+    if (activePin) {
+      activePin.classList.remove('map__pin--active');
+    }
+
 
     if (oldPopup) {
       oldPopup.remove();
@@ -120,6 +128,7 @@
 
     filtered = window.utility.setLimitPins(filtered);
 
+    document.querySelector('.popup').remove();
     window.map.clearMap();
     window.map.renderPins(filtered);
   });
@@ -132,13 +141,7 @@
   window.form.filterCheckinCheckout();
   window.form.filterCapacityOptions();
 
-
-  window.form.adForm.addEventListener('submit', function (evt) {
-    window.upload(new FormData(window.form.adForm), window.success.showSuccessMessage);
-    evt.preventDefault();
-
-    window.form.formReset();
-
+  var resetPage = function () {
     window.map.mapPinMain.style.top = window.map.mapHeight / 2 + 'px';
     window.map.mapPinMain.style.left = window.map.mapWidth / 2 + 'px';
 
@@ -157,10 +160,34 @@
     }
 
     window.map.resetFilters();
-    window.map.resetFeatures();
+    window.map.resetMapFeatures();
 
     setTimeout(window.form.address.value = window.map.getMainSmallPinLocation(window.map.mapPinMain), 1000);
-    document.getElementById('price').setAttribute('placeholder', '1 000');
+    window.form.title.value = '';
+    window.form.title.placeholder = 'Милая, уютная квартирка в центре Токио';
+
+    window.form.typeOfHouse.value = 'flat';
+    window.form.priceOfHouse.value = '';
+    window.form.priceOfHouse.placeholder = '1 000';
+    window.form.timein.value = '12:00';
+    window.form.timeout.value = '12:00';
+    window.form.roomNumber.value = '1';
+    window.form.capacity.value = '1';
+    window.form.resetFormFeatures();
+  };
+
+
+  window.form.adForm.addEventListener('submit', function (evt) {
+    window.upload(new FormData(window.form.adForm), window.success.showSuccessMessage);
+    evt.preventDefault();
+
+    resetPage();
+  });
+
+  window.form.resetButton.addEventListener('click', function (evt) {
+    evt.preventDefault();
+
+    resetPage();
   });
 
 
