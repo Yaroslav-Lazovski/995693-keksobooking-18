@@ -1,17 +1,25 @@
 'use strict';
 
 (function () {
-  var adForm = document.querySelector('.ad-form');
-  var adformFieldsets = adForm.querySelectorAll('fieldset');
+  var MIN_LENGTH_OF_TITLE = 30;
+  var NOT_FOR_GUESTS_VALUE = 0;
+  var MAX_NUMBERS_OF_ROOMS = 100;
+
+  var blank = document.querySelector('.ad-form');
+  var blankFieldsets = blank.querySelectorAll('fieldset');
+  var avatar = document.querySelector('.ad-form-header__input');
+  var previewAvatar = document.querySelector('.ad-form-header__preview').querySelector('img');
   var address = document.querySelector('#address');
-  var title = document.getElementById('title');
-  var typeOfHouse = document.getElementById('type');
-  var priceOfHouse = document.getElementById('price');
-  var timein = document.getElementById('timein');
-  var timeout = document.getElementById('timeout');
-  var roomNumber = document.getElementById('room_number');
-  var capacity = document.getElementById('capacity');
-  var formFeatures = document.querySelectorAll('.feature__checkbox');
+  var title = document.querySelector('#title');
+  var typeOfHouse = document.querySelector('#type');
+  var priceOfHouse = document.querySelector('#price');
+  var timein = document.querySelector('#timein');
+  var timeout = document.querySelector('#timeout');
+  var roomNumber = document.querySelector('#room_number');
+  var capacity = document.querySelector('#capacity');
+  var features = document.querySelectorAll('.feature__checkbox');
+  var photosUpload = document.querySelector('.ad-form__input');
+  var previewPhotos = document.querySelector('.ad-form__photo');
   var resetButton = document.querySelector('.ad-form__reset');
 
 
@@ -25,22 +33,22 @@
     }
   };
 
-  var toggleFormEnabled = function (enabled) {
+  var toggleEnabled = function (enabled) {
     if (enabled) {
-      adForm.classList.remove('ad-form--disabled');
+      blank.classList.remove('ad-form--disabled');
     } else {
-      adForm.classList.add('ad-form--disabled');
+      blank.classList.add('ad-form--disabled');
     }
-    setFieldsEnabled(adformFieldsets, enabled);
+    setFieldsEnabled(blankFieldsets, enabled);
   };
 
-  var toggleFormDisabled = function (disabled) {
-    adForm.classList.add('ad-form--disabled');
-    setFieldsEnabled(adformFieldsets, disabled);
+  var toggleDisabled = function (disabled) {
+    blank.classList.add('ad-form--disabled');
+    setFieldsEnabled(blankFieldsets, disabled);
   };
 
 
-  var filterHousingType = function () {
+  var onHousingTypeChange = function () {
     switch (typeOfHouse.value) {
       case 'palace':
         priceOfHouse.setAttribute('placeholder', '10 000');
@@ -63,7 +71,7 @@
   };
 
 
-  var filterCheckinCheckout = function () {
+  var onCheckinCheckoutChange = function () {
     timein.addEventListener('change', function () {
       timeout.selectedIndex = timein.selectedIndex;
     });
@@ -73,7 +81,7 @@
   };
 
 
-  var filterCapacityOptions = function () {
+  var onCapacityChange = function () {
     var rooms = parseInt(roomNumber.value, 10);
     var suitableCapacity;
 
@@ -81,7 +89,7 @@
       var capacityOption = capacity.options[i];
       var guests = parseInt(capacityOption.value, 10);
 
-      if ((guests === 0 && rooms === 100) || (guests <= rooms && guests !== 0 && rooms !== 100)) {
+      if ((guests === NOT_FOR_GUESTS_VALUE && rooms === MAX_NUMBERS_OF_ROOMS) || (guests <= rooms && guests !== NOT_FOR_GUESTS_VALUE && rooms !== MAX_NUMBERS_OF_ROOMS)) {
         capacityOption.removeAttribute('disabled');
         suitableCapacity = capacityOption;
       } else {
@@ -91,27 +99,76 @@
     suitableCapacity.setAttribute('selected', 'selected');
   };
 
-  var resetFormFeatures = function () {
-    for (var i = 0; i < formFeatures.length; i++) {
-      formFeatures[i].checked = false;
+
+  var resetFeatures = function () {
+    for (var i = 0; i < features.length; i++) {
+      features[i].checked = false;
     }
   };
 
 
-  title.addEventListener('invalid', function (evt) {
-    evt.currentTarget.style.border = '3px solid #DD2C00';
-  });
+  var resetBlank = function () {
+    previewAvatar.setAttribute('src', 'img/muffin-grey.svg');
+    setTimeout(window.form.address.value = window.map.getSmallPinLocation(window.map.mainPin), 1000);
+    title.value = '';
+    title.placeholder = 'Милая, уютная квартирка в центре Токио';
+    typeOfHouse.value = 'flat';
+    priceOfHouse.value = '';
+    priceOfHouse.placeholder = '1 000';
+    timein.value = '12:00';
+    timeout.value = '12:00';
+    roomNumber.value = '1';
+    capacity.value = '1';
+    resetFeatures();
+    if (previewPhotos.querySelector('img')) {
+      previewPhotos.querySelector('img').remove();
+    }
+  };
 
-  priceOfHouse.addEventListener('invalid', function (evt) {
-    evt.currentTarget.style.border = '3px solid #DD2C00';
-  });
+  var onPhotosUploadChange = function () {
+    var preview = document.createElement('img');
+    preview.setAttribute('src', '');
+    preview.setAttribute('width', '70');
+    preview.setAttribute('height', '70');
+    preview.setAttribute('alt', 'Фотографии жилья');
+    window.photos.handleUpload(photosUpload.files[0], previewPhotos.appendChild(preview));
+  };
 
 
-  address.value = window.map.getMainPinLocation(window.map.mapPinMain);
-  setFieldsEnabled(adformFieldsets, false);
+  var onTitleSetRedBorder = function () {
+    title.style.border = '3px solid #DD2C00';
+  };
+
+  var onPriceSetRedBorder = function () {
+    priceOfHouse.style.border = '3px solid #DD2C00';
+  };
+
+  var onTitleRemoveRedBorder = function () {
+    if (title.value.length >= MIN_LENGTH_OF_TITLE) {
+      title.style.border = '';
+    }
+  };
+
+  var onPriceRemoveRedBorder = function () {
+    var minPrice = parseInt(priceOfHouse.min, 10);
+    var maxPrice = parseInt(priceOfHouse.max, 10);
+    var price = parseInt(priceOfHouse.value, 10);
+
+    if (price >= minPrice && price <= maxPrice) {
+      priceOfHouse.style.border = '';
+    }
+  };
+
+  onHousingTypeChange();
+
+  address.value = window.map.getMainPinLocation(window.map.mainPin);
+  setFieldsEnabled(blankFieldsets, false);
+
 
   window.form = {
-    adForm: adForm,
+    blank: blank,
+    avatar: avatar,
+    previewAvatar: previewAvatar,
     address: address,
     title: title,
     typeOfHouse: typeOfHouse,
@@ -120,13 +177,20 @@
     timeout: timeout,
     roomNumber: roomNumber,
     capacity: capacity,
+    photosUpload: photosUpload,
     resetButton: resetButton,
 
-    toggleFormEnabled: toggleFormEnabled,
-    toggleFormDisabled: toggleFormDisabled,
-    filterHousingType: filterHousingType,
-    filterCheckinCheckout: filterCheckinCheckout,
-    filterCapacityOptions: filterCapacityOptions,
-    resetFormFeatures: resetFormFeatures,
+    toggleEnabled: toggleEnabled,
+    toggleDisabled: toggleDisabled,
+    onHousingTypeChange: onHousingTypeChange,
+    onCheckinCheckoutChange: onCheckinCheckoutChange,
+    onCapacityChange: onCapacityChange,
+    onPhotosUploadChange: onPhotosUploadChange,
+    resetFeatures: resetFeatures,
+    resetBlank: resetBlank,
+    onTitleSetRedBorder: onTitleSetRedBorder,
+    onPriceSetRedBorder: onPriceSetRedBorder,
+    onTitleRemoveRedBorder: onTitleRemoveRedBorder,
+    onPriceRemoveRedBorder: onPriceRemoveRedBorder
   };
 })();

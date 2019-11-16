@@ -7,10 +7,10 @@
     document.querySelector('.success').remove();
   };
 
-  var showSuccessMessage = function () {
+  var showMessage = function () {
     var main = document.querySelector('main');
-    var element = template.cloneNode(true);
-    main.appendChild(element);
+    var message = template.cloneNode(true);
+    main.appendChild(message);
 
     document.querySelector('.success').addEventListener('click', closeSuccessMessage);
 
@@ -22,6 +22,6 @@
   };
 
   window.success = {
-    showSuccessMessage: showSuccessMessage
+    showMessage: showMessage
   };
 })();

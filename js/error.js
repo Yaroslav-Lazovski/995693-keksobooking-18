@@ -7,14 +7,14 @@
     document.querySelector('.error').remove();
   };
 
-  var showErrorMessage = function (message) {
+  var showMessage = function (message) {
     var main = document.querySelector('main');
-    var element = template.cloneNode(true);
-    element.querySelector('.error__message').textContent = message;
-    main.appendChild(element);
+    var error = template.cloneNode(true);
+    error.querySelector('.error__message').textContent = message;
+    main.appendChild(error);
 
-    element.querySelector('.error__button').addEventListener('click', closeErrorMessage);
-    element.addEventListener('click', closeErrorMessage);
+    error.querySelector('.error__button').addEventListener('click', closeErrorMessage);
+    error.addEventListener('click', closeErrorMessage);
 
     document.addEventListener('keydown', function (evt) {
       if (evt.keyCode === window.map.ESC_KEYCODE) {
@@ -24,6 +24,6 @@
   };
 
   window.error = {
-    showErrorMessage: showErrorMessage
+    showMessage: showMessage
   };
 })();
