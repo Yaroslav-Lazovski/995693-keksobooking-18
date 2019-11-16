@@ -103,15 +103,15 @@
       window.map.mainPin.style.left = (window.map.mainPin.offsetLeft - shift.x) + 'px';
 
       if (window.map.mainPin.offsetTop < window.map.BORDER_TOP_Y_VALUE - window.map.mainPinHeight - window.map.MAIN_PIN_ARROW_VALUE) {
-        window.map.mapPinMain.style.top = window.map.BORDER_TOP_Y_VALUE - window.map.mainPinHeight - window.map.MAIN_PIN_ARROW_VALUE + 'px';
+        window.map.mainPin.style.top = window.map.BORDER_TOP_Y_VALUE - window.map.mainPinHeight - window.map.MAIN_PIN_ARROW_VALUE + 'px';
       } else if (window.map.mainPin.offsetTop > window.map.BORDER_BOTTOM_Y_VALUE - window.map.mainPinHeight - window.map.MAIN_PIN_ARROW_VALUE) {
         window.map.mainPin.style.top = window.map.BORDER_BOTTOM_Y_VALUE - window.map.mainPinHeight - window.map.MAIN_PIN_ARROW_VALUE + 'px';
       }
 
       if (window.map.mainPin.offsetLeft < -window.map.mainPinWidth / 2) {
         window.map.mainPin.style.left = -window.map.mainPinWidth / 2 + 'px';
-      } else if (window.map.mainPin.offsetLeft > window.map.mapWidth - window.map.mainPinWidth / 2) {
-        window.map.mainPin.style.left = window.map.mapWidth - window.map.mainPinWidth / 2 + 'px';
+      } else if (window.map.mainPin.offsetLeft > window.map.width - window.map.mainPinWidth / 2) {
+        window.map.mainPin.style.left = window.map.width - window.map.mainPinWidth / 2 + 'px';
       }
 
       window.form.address.value = window.map.getSmallPinLocation(window.map.mainPin);
