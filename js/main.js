@@ -136,7 +136,7 @@
     window.upload(new FormData(window.form.blank), window.success.showMessage);
     evt.preventDefault();
 
-    window.resetPage();
+    window.reset();
   });
 
   window.form.resetButton.addEventListener('click', function (evt) {
