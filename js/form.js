@@ -148,9 +148,8 @@
   };
 
 
-  var onInputShowInvalid = function (evt) {
-    var el = evt.target;
-    el.style.border = '3px solid #DD2C00';
+  var onInputShowInvalid = function (element) {
+    element.style.border = '3px solid #DD2C00';
   };
 
 

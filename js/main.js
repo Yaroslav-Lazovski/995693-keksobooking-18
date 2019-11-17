@@ -153,10 +153,14 @@
   window.form.typeOfHouse.addEventListener('change', window.form.onHousingTypeChange);
   window.form.roomNumber.addEventListener('change', window.form.onCapacityChange);
 
-  window.form.title.addEventListener('invalid', window.form.onInputShowInvalid);
+  window.form.title.addEventListener('invalid', function (evt) {
+    window.form.onInputShowInvalid(evt.target);
+  });
   window.form.title.addEventListener('input', window.form.onTitleRemoveInvalid);
 
-  window.form.priceOfHouse.addEventListener('invalid', window.form.onInputShowInvalid);
+  window.form.priceOfHouse.addEventListener('invalid', function (evt) {
+    window.form.onInputShowInvalid(evt.target);
+  });
   window.form.priceOfHouse.addEventListener('input', window.form.onPriceRemoveInvalid);
 
   window.form.onHousingTypeChange();
