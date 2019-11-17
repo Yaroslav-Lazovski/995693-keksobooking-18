@@ -7,29 +7,29 @@
   var BORDER_TOP_Y_VALUE = 130;
   var BORDER_BOTTOM_Y_VALUE = 630;
 
-  var map = document.querySelector('.map');
-  var mapPins = document.querySelector('.map__pins');
-  var mapWidth = map.offsetWidth;
-  var mapHeight = map.offsetHeight;
-  var mapFiltersContainer = document.querySelector('.map__filters-container');
-  var mapPinMain = document.querySelector('.map__pin--main');
-  var mapPinMainSmall = mapPinMain.querySelector('img');
-  var mainPinWidth = mapPinMain.offsetWidth;
-  var mainPinHeight = mapPinMain.offsetHeight;
+  var plan = document.querySelector('.map');
+  var pins = document.querySelector('.map__pins');
+  var width = plan.offsetWidth;
+  var height = plan.offsetHeight;
+  var filtersContainer = document.querySelector('.map__filters-container');
+  var mainPin = document.querySelector('.map__pin--main');
+  var smallPin = mainPin.querySelector('img');
+  var mainPinWidth = mainPin.offsetWidth;
+  var mainPinHeight = mainPin.offsetHeight;
   var filters = document.querySelectorAll('.map__filter');
-  var housingType = document.getElementById('housing-type');
-  var housingPrice = document.getElementById('housing-price');
-  var housingRooms = document.getElementById('housing-rooms');
-  var housingGuests = document.getElementById('housing-guests');
-  var housingFeatures = document.getElementById('housing-features');
+  var housingType = document.querySelector('#housing-type');
+  var housingPrice = document.querySelector('#housing-price');
+  var housingRooms = document.querySelector('#housing-rooms');
+  var housingGuests = document.querySelector('#housing-guests');
+  var housingFeatures = document.querySelector('#housing-features');
   var mapCheckbox = housingFeatures.querySelectorAll('.map__checkbox');
 
 
-  var createPin = function (offer) {
-    var pinOffsetY = 62 / 2 + 22;
-    var pinOffsetX = 62 / 2;
-    var yWithOffset = offer.location.y - pinOffsetY;
-    var xWithOffset = offer.location.x + pinOffsetX;
+  var createPin = function (advert) {
+    var pinOffsetY = mainPinHeight / 2 + MAIN_PIN_ARROW_VALUE;
+    var pinOffsetX = mainPinWidth / 2;
+    var yWithOffset = advert.location.y - pinOffsetY;
+    var xWithOffset = advert.location.x + pinOffsetX;
     var pinButton = document.createElement('button');
     var pinImg = document.createElement('img');
 
@@ -37,8 +37,8 @@
     pinButton.setAttribute('class', 'map__pin');
     pinButton.setAttribute('style', 'left: ' + xWithOffset + 'px;' + 'top: ' + yWithOffset + 'px;');
 
-    pinImg.setAttribute('src', offer.author.avatar);
-    pinImg.setAttribute('alt', offer.offer.title);
+    pinImg.setAttribute('src', advert.author.avatar);
+    pinImg.setAttribute('alt', advert.offer.title);
     pinImg.setAttribute('width', '40');
     pinImg.setAttribute('height', '40');
     pinImg.setAttribute('draggable', 'false');
@@ -48,45 +48,41 @@
     return pinButton;
   };
 
-  var renderPins = function (offers) {
+  var renderPins = function (adverts) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < offers.length; i++) {
-      var pin = createPin(offers[i]);
-      fragment.appendChild(pin);
-    }
+    adverts.map(createPin)
+      .forEach(function (pin) {
+        fragment.appendChild(pin);
+      });
 
-    mapPins.appendChild(fragment);
+    pins.appendChild(fragment);
   };
 
 
-  var toggleMapEnabled = function (enabled) {
+  var toggleEnabled = function (enabled) {
     if (enabled) {
-      map.classList.remove('map--faded');
+      plan.classList.remove('map--faded');
     } else {
-      map.classList.add('map--faded');
+      plan.classList.add('map--faded');
     }
   };
 
-  var toggleMapDisabled = function () {
-    map.classList.add('map--faded');
-  };
-
-  var getMainPinLocation = function (mainPin) {
-    var x = Math.round(mainPin.offsetLeft + mainPin.offsetWidth / 2);
-    var y = Math.round(mainPin.offsetTop + mainPin.offsetHeight / 2);
+  var getMainPinLocation = function (pinMain) {
+    var x = Math.round(pinMain.offsetLeft + pinMain.offsetWidth / 2);
+    var y = Math.round(pinMain.offsetTop + pinMain.offsetHeight / 2);
 
     return x + ', ' + y;
   };
 
-  var getMainSmallPinLocation = function (smallPin) {
-    var x = Math.round(smallPin.offsetLeft + smallPin.offsetWidth);
-    var y = Math.round(smallPin.offsetTop + smallPin.offsetHeight + 22);
+  var getSmallPinLocation = function (pinSmall) {
+    var x = Math.round(pinSmall.offsetLeft + pinSmall.offsetWidth);
+    var y = Math.round(pinSmall.offsetTop + pinSmall.offsetHeight + 22);
 
     return x + ', ' + y;
   };
 
-  var clearMap = function () {
+  var clear = function () {
     var mapPin = document.querySelectorAll('.map__pin');
     mapPin.forEach(function (item) {
       if (item.classList.contains('map__pin--main')) {
@@ -99,7 +95,7 @@
 
 
   var setPinClickListener = function (listener) {
-    mapPins.addEventListener('click', function (evt) {
+    pins.addEventListener('click', function (evt) {
       var el = evt.target;
 
       while (el !== null) {
@@ -127,48 +123,48 @@
     housingFeatures.addEventListener('change', window.debounce(listener));
   };
 
-  var isOfferSuitable = function (offer) {
-    return isTypeSuitable(offer) &&
-      isPriceSuitable(offer) &&
-      isRoomsSuitable(offer) &&
-      isGuestsSuitable(offer) &&
-      areFeaturesSuitable(offer);
+  var isOfferSuitable = function (advert) {
+    return isTypeSuitable(advert) &&
+      isPriceSuitable(advert) &&
+      isRoomsSuitable(advert) &&
+      isGuestsSuitable(advert) &&
+      areFeaturesSuitable(advert);
   };
 
-  var isTypeSuitable = function (offer) {
+  var isTypeSuitable = function (advert) {
     var selectedType = housingType.value;
 
     return selectedType === 'any' ||
-      selectedType === offer.offer.type;
+      selectedType === advert.offer.type;
   };
 
-  var isPriceSuitable = function (offer) {
+  var isPriceSuitable = function (advert) {
     var selectedPrice = housingPrice.value;
 
-    if (selectedPrice === 'low' && offer.offer.price <= 10000) {
-      selectedPrice = offer.offer.price;
-    } else if (selectedPrice === 'middle' && (offer.offer.price >= 10000 && offer.offer.price <= 50000)) {
-      selectedPrice = offer.offer.price;
-    } else if (selectedPrice === 'high' && offer.offer.price >= 50000) {
-      selectedPrice = offer.offer.price;
+    if (selectedPrice === 'low' && advert.offer.price <= 10000) {
+      selectedPrice = advert.offer.price;
+    } else if (selectedPrice === 'middle' && (advert.offer.price >= 10000 && advert.offer.price <= 50000)) {
+      selectedPrice = advert.offer.price;
+    } else if (selectedPrice === 'high' && advert.offer.price >= 50000) {
+      selectedPrice = advert.offer.price;
     }
 
     return selectedPrice === 'any' ||
-      selectedPrice === offer.offer.price;
+      selectedPrice === advert.offer.price;
   };
 
-  var isRoomsSuitable = function (offer) {
+  var isRoomsSuitable = function (advert) {
     var selectedRooms = housingRooms.value;
 
     return selectedRooms === 'any' ||
-      parseInt(selectedRooms, 10) === offer.offer.rooms;
+      parseInt(selectedRooms, 10) === advert.offer.rooms;
   };
 
-  var isGuestsSuitable = function (offer) {
+  var isGuestsSuitable = function (advert) {
     var selectedGuests = housingGuests.value;
 
     return selectedGuests === 'any' ||
-      parseInt(selectedGuests, 10) === offer.offer.guests;
+      parseInt(selectedGuests, 10) === advert.offer.guests;
   };
 
   var collectSelectedFeatures = function () {
@@ -181,13 +177,13 @@
     return arr;
   };
 
-  var areFeaturesSuitable = function (offer) {
+  var areFeaturesSuitable = function (advert) {
     var selectedFeatures = collectSelectedFeatures();
 
     for (var i = 0; i < selectedFeatures.length; i++) {
       var feature = selectedFeatures[i];
 
-      if (!offer.offer.features.includes(feature)) {
+      if (!advert.offer.features.includes(feature)) {
         return false;
       }
     }
@@ -202,10 +198,35 @@
     }
   };
 
-  var resetMapFeatures = function () {
+  var resetFeatures = function () {
     for (var i = 0; i < mapCheckbox.length; i++) {
       mapCheckbox[i].checked = false;
     }
+  };
+
+  var fullReset = function () {
+    window.map.mainPin.style.top = window.map.height / 2 + 'px';
+    window.map.mainPin.style.left = window.map.width / 2 + 'px';
+
+    for (var i = 0; i < filters.length; i++) {
+      filters[i].value = 'any';
+    }
+
+    if (document.querySelector('.popup')) {
+      document.querySelector('.popup').remove();
+    }
+
+    var renderedPins = document.querySelectorAll('.map__pin');
+
+    renderedPins.forEach(function (item) {
+      if (!item.classList.contains('map__pin--main')) {
+        item.remove();
+      }
+    });
+
+    toggleEnabled();
+    resetFilters();
+    resetFeatures();
   };
 
 
@@ -216,26 +237,24 @@
     BORDER_TOP_Y_VALUE: BORDER_TOP_Y_VALUE,
     BORDER_BOTTOM_Y_VALUE: BORDER_BOTTOM_Y_VALUE,
 
-    map: map,
-    mapWidth: mapWidth,
-    mapHeight: mapHeight,
-    mapPinMain: mapPinMain,
-    mapPinMainSmall: mapPinMainSmall,
+    plan: plan,
+    width: width,
+    height: height,
+    mainPin: mainPin,
+    smallPin: smallPin,
     mainPinWidth: mainPinWidth,
     mainPinHeight: mainPinHeight,
-    mapFiltersContainer: mapFiltersContainer,
+    filtersContainer: filtersContainer,
 
     createPin: createPin,
     renderPins: renderPins,
-    toggleMapEnabled: toggleMapEnabled,
-    toggleMapDisabled: toggleMapDisabled,
+    toggleEnabled: toggleEnabled,
     getMainPinLocation: getMainPinLocation,
-    getMainSmallPinLocation: getMainSmallPinLocation,
-    clearMap: clearMap,
+    getSmallPinLocation: getSmallPinLocation,
+    clear: clear,
     setFiltersChangedListener: setFiltersChangedListener,
     isOfferSuitable: isOfferSuitable,
     setPinClickListener: setPinClickListener,
-    resetFilters: resetFilters,
-    resetMapFeatures: resetMapFeatures
+    fullReset: fullReset,
   };
 })();
