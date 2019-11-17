@@ -19,8 +19,8 @@
       if (evt.keyCode === window.map.ESC_KEYCODE) {
         closeErrorMessage();
       }
-      main.appendChild(error);
     });
+    main.appendChild(error);
   };
 
   window.error = {

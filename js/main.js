@@ -54,6 +54,7 @@
     window.handleUpload(window.form.avatar.files[0], window.form.previewAvatar);
   });
 
+
   window.form.photosUpload.addEventListener('change', window.form.onPhotosUploadChange);
 
 
@@ -111,20 +112,31 @@
     onMainPinAction();
   });
 
+
   window.form.blank.addEventListener('submit', function (evt) {
     window.upload(new FormData(window.form.blank), window.success.showMessage);
     evt.preventDefault();
 
     window.map.fullReset();
     window.form.fullReset();
+
+    window.map.mainPin.addEventListener('mousedown', onMainPinMousedown);
+
+    setTimeout(window.form.address.value = window.map.getSmallPinLocation(window.map.mainPin), 1000);
   });
+
 
   window.form.resetButton.addEventListener('click', function (evt) {
     evt.preventDefault();
 
     window.map.fullReset();
     window.form.fullReset();
+
+    window.map.mainPin.addEventListener('mousedown', onMainPinMousedown);
+
+    setTimeout(window.form.address.value = window.map.getSmallPinLocation(window.map.mainPin), 1000);
   });
+
 
   window.map.mainPin.addEventListener('keydown', function (evt) {
     if (evt.keyCode === window.map.ENTER_KEYCODE) {
@@ -132,9 +144,11 @@
     }
   });
 
+
   window.map.mainPin.addEventListener('click', function () {
     onMainPinAction();
   });
+
 
   window.form.typeOfHouse.addEventListener('change', window.form.onHousingTypeChange);
   window.form.roomNumber.addEventListener('change', window.form.onCapacityChange);
@@ -152,6 +166,7 @@
   window.form.address.value = window.map.getMainPinLocation(window.map.mainPin);
   window.form.setFieldsEnabled(window.form.blankFieldsets, false);
 
+
   var onMainPinMousedown = function () {
     window.backend(function (data) {
       adverts = data;
@@ -162,10 +177,9 @@
       window.map.renderPins(data);
       window.map.toggleEnabled(true);
       window.map.setPinClickListener(onPinCLick);
+      window.map.mainPin.removeEventListener('mousedown', onMainPinMousedown);
 
     }, window.error.showMessage);
-
-    window.map.mainPin.removeEventListener('mousedown', onMainPinMousedown);
   };
 
   window.map.mainPin.addEventListener('mousedown', onMainPinMousedown);

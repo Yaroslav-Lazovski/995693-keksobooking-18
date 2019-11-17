@@ -118,26 +118,23 @@
 
 
   var resetBlank = function () {
+    blank.reset();
+  };
+
+  var resetPhotos = function () {
     previewAvatar.setAttribute('src', 'img/muffin-grey.svg');
-    setTimeout(window.form.address.value = window.map.getSmallPinLocation(window.map.mainPin), 1000);
-    title.value = '';
-    title.placeholder = 'Милая, уютная квартирка в центре Токио';
-    typeOfHouse.value = 'flat';
-    priceOfHouse.value = '';
-    priceOfHouse.placeholder = '1 000';
-    timein.value = '12:00';
-    timeout.value = '12:00';
-    roomNumber.value = '1';
-    capacity.value = '1';
+
     if (previewPhotos.querySelector('img')) {
       previewPhotos.querySelector('img').remove();
     }
   };
 
+
   var fullReset = function () {
     toggleEnabled();
     resetFeatures();
     resetBlank();
+    resetPhotos();
   };
 
 
