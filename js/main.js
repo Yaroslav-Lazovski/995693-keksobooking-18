@@ -12,6 +12,18 @@
 
   var onPinCLick = function (pin) {
     var pinTitle = pin.querySelector('img').alt;
+    var oldPopup = document.querySelector('.popup');
+    var activePin = document.querySelector('.map__pin--active');
+
+    pin.classList.add('map__pin--active');
+
+    if (activePin) {
+      activePin.classList.remove('map__pin--active');
+    }
+
+    if (oldPopup) {
+      oldPopup.remove();
+    }
 
     var advertToShow = adverts.find(function (adv) {
       return adv.offer.title === pinTitle;
@@ -140,7 +152,7 @@
   window.form.address.value = window.map.getMainPinLocation(window.map.mainPin);
   window.form.setFieldsEnabled(window.form.blankFieldsets, false);
 
-  window.map.mainPin.addEventListener('mousedown', function () {
+  var onMainPinMousedown = function () {
     window.backend(function (data) {
       adverts = data;
       if (adverts.length > 5) {
@@ -148,10 +160,13 @@
       }
 
       window.map.renderPins(data);
-
       window.map.toggleEnabled(true);
       window.map.setPinClickListener(onPinCLick);
 
     }, window.error.showMessage);
-  });
+
+    window.map.mainPin.removeEventListener('mousedown', onMainPinMousedown);
+  };
+
+  window.map.mainPin.addEventListener('mousedown', onMainPinMousedown);
 })();

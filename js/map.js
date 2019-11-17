@@ -3,9 +3,18 @@
 (function () {
   var ENTER_KEYCODE = 13;
   var ESC_KEYCODE = 27;
+
   var MAIN_PIN_ARROW_VALUE = 22;
   var BORDER_TOP_Y_VALUE = 130;
   var BORDER_BOTTOM_Y_VALUE = 630;
+
+  var LOW_PRICE = 'low';
+  var LOW_PRICE_VALUE = 10000;
+  var MIDDLE_PRICE = 'middle';
+  var MIDDLE_PRICE_MIN_VALUE = 10000;
+  var MIDDLE_PRICE_MAX_VALUE = 50000;
+  var HIGH_PRICE = 'high';
+  var HIGH_PRICE_VALUE = 50000;
 
   var plan = document.querySelector('.map');
   var pins = document.querySelector('.map__pins');
@@ -138,14 +147,15 @@
       selectedType === advert.offer.type;
   };
 
+
   var isPriceSuitable = function (advert) {
     var selectedPrice = housingPrice.value;
 
-    if (selectedPrice === 'low' && advert.offer.price <= 10000) {
+    if (selectedPrice === LOW_PRICE && advert.offer.price <= LOW_PRICE_VALUE) {
       selectedPrice = advert.offer.price;
-    } else if (selectedPrice === 'middle' && (advert.offer.price >= 10000 && advert.offer.price <= 50000)) {
+    } else if (selectedPrice === MIDDLE_PRICE && (advert.offer.price >= MIDDLE_PRICE_MIN_VALUE && advert.offer.price <= MIDDLE_PRICE_MAX_VALUE)) {
       selectedPrice = advert.offer.price;
-    } else if (selectedPrice === 'high' && advert.offer.price >= 50000) {
+    } else if (selectedPrice === HIGH_PRICE && advert.offer.price >= HIGH_PRICE_VALUE) {
       selectedPrice = advert.offer.price;
     }
 

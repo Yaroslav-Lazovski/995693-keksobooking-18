@@ -22,6 +22,18 @@
   var previewPhotos = document.querySelector('.ad-form__photo');
   var resetButton = document.querySelector('.ad-form__reset');
 
+  var priceOfHouseObject = {
+    'palace placeholder': '10 000',
+    'flat placeholder': '1 000',
+    'house placeholder': '5 000',
+    'bungalo placeholder': '0',
+
+    'palace min': 10000,
+    'flat min': 1000,
+    'house min': 5000,
+    'bungalo min': 0,
+  };
+
 
   var setFieldsEnabled = function (fieldsets, enabled) {
     for (var i = 0; i < fieldsets.length; i++) {
@@ -46,20 +58,20 @@
   var onHousingTypeChange = function () {
     switch (typeOfHouse.value) {
       case 'palace':
-        priceOfHouse.setAttribute('placeholder', '10 000');
-        priceOfHouse.setAttribute('min', 10000);
+        priceOfHouse.setAttribute('placeholder', priceOfHouseObject['palace placeholder']);
+        priceOfHouse.setAttribute('min', priceOfHouseObject['palace min']);
         break;
       case 'flat':
-        priceOfHouse.setAttribute('placeholder', '1 000');
-        priceOfHouse.setAttribute('min', 1000);
+        priceOfHouse.setAttribute('placeholder', priceOfHouseObject['flat placeholder']);
+        priceOfHouse.setAttribute('min', priceOfHouseObject['flat min']);
         break;
       case 'house':
-        priceOfHouse.setAttribute('placeholder', '5 000');
-        priceOfHouse.setAttribute('min', 5000);
+        priceOfHouse.setAttribute('placeholder', priceOfHouseObject['house placeholder']);
+        priceOfHouse.setAttribute('min', priceOfHouseObject['house min']);
         break;
       case 'bungalo':
-        priceOfHouse.setAttribute('placeholder', '0');
-        priceOfHouse.setAttribute('min', 0);
+        priceOfHouse.setAttribute('placeholder', priceOfHouseObject['bungalo placeholder']);
+        priceOfHouse.setAttribute('min', priceOfHouseObject['bungalo min']);
         break;
     }
     return null;
@@ -140,7 +152,8 @@
 
 
   var onInputShowInvalid = function (evt) {
-    evt.target.style.border = '3px solid #DD2C00';
+    var el = evt.target;
+    el.style.border = '3px solid #DD2C00';
   };
 
 
