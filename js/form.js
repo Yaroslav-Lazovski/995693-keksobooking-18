@@ -117,7 +117,6 @@
     timeout.value = '12:00';
     roomNumber.value = '1';
     capacity.value = '1';
-    // resetFeatures();
     if (previewPhotos.querySelector('img')) {
       previewPhotos.querySelector('img').remove();
     }
