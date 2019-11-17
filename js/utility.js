@@ -13,7 +13,7 @@
     return arr[rand];
   };
 
-  var setLimitPins = function (offers) {
+  var limitPins = function (offers) {
     var slicedOffers = offers.slice();
     if (offers.length > 5) {
       slicedOffers = slicedOffers.slice(0, 5);
@@ -24,6 +24,6 @@
   window.utility = {
     getRandomBetween: getRandomBetween,
     chooseRandom: chooseRandom,
-    setLimitPins: setLimitPins
+    limitPins: limitPins
   };
 })();

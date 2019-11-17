@@ -42,11 +42,6 @@
     setFieldsEnabled(blankFieldsets, enabled);
   };
 
-  var toggleDisabled = function (disabled) {
-    blank.classList.add('ad-form--disabled');
-    setFieldsEnabled(blankFieldsets, disabled);
-  };
-
 
   var onHousingTypeChange = function () {
     switch (typeOfHouse.value) {
@@ -89,7 +84,10 @@
       var capacityOption = capacity.options[i];
       var guests = parseInt(capacityOption.value, 10);
 
-      if ((guests === NOT_FOR_GUESTS_VALUE && rooms === MAX_NUMBERS_OF_ROOMS) || (guests <= rooms && guests !== NOT_FOR_GUESTS_VALUE && rooms !== MAX_NUMBERS_OF_ROOMS)) {
+      if ((guests === NOT_FOR_GUESTS_VALUE && rooms === MAX_NUMBERS_OF_ROOMS) ||
+        (guests <= rooms &&
+          guests !== NOT_FOR_GUESTS_VALUE &&
+          rooms !== MAX_NUMBERS_OF_ROOMS)) {
         capacityOption.removeAttribute('disabled');
         suitableCapacity = capacityOption;
       } else {
@@ -101,9 +99,9 @@
 
 
   var resetFeatures = function () {
-    for (var i = 0; i < features.length; i++) {
-      features[i].checked = false;
-    }
+    features.forEach(function (item) {
+      item.checked = false;
+    });
   };
 
 
@@ -119,11 +117,18 @@
     timeout.value = '12:00';
     roomNumber.value = '1';
     capacity.value = '1';
-    resetFeatures();
+    // resetFeatures();
     if (previewPhotos.querySelector('img')) {
       previewPhotos.querySelector('img').remove();
     }
   };
+
+  var fullReset = function () {
+    toggleEnabled();
+    resetFeatures();
+    resetBlank();
+  };
+
 
   var onPhotosUploadChange = function () {
     var preview = document.createElement('img');
@@ -131,25 +136,22 @@
     preview.setAttribute('width', '70');
     preview.setAttribute('height', '70');
     preview.setAttribute('alt', 'Фотографии жилья');
-    window.photos.handleUpload(photosUpload.files[0], previewPhotos.appendChild(preview));
+    window.handleUpload(photosUpload.files[0], previewPhotos.appendChild(preview));
   };
 
 
-  var onTitleSetRedBorder = function () {
-    title.style.border = '3px solid #DD2C00';
+  var onInputShowInvalid = function (evt) {
+    evt.target.style.border = '3px solid #DD2C00';
   };
 
-  var onPriceSetRedBorder = function () {
-    priceOfHouse.style.border = '3px solid #DD2C00';
-  };
 
-  var onTitleRemoveRedBorder = function () {
+  var onTitleRemoveInvalid = function () {
     if (title.value.length >= MIN_LENGTH_OF_TITLE) {
       title.style.border = '';
     }
   };
 
-  var onPriceRemoveRedBorder = function () {
+  var onPriceRemoveInvalid = function () {
     var minPrice = parseInt(priceOfHouse.min, 10);
     var maxPrice = parseInt(priceOfHouse.max, 10);
     var price = parseInt(priceOfHouse.value, 10);
@@ -159,14 +161,10 @@
     }
   };
 
-  onHousingTypeChange();
-
-  address.value = window.map.getMainPinLocation(window.map.mainPin);
-  setFieldsEnabled(blankFieldsets, false);
-
 
   window.form = {
     blank: blank,
+    blankFieldsets: blankFieldsets,
     avatar: avatar,
     previewAvatar: previewAvatar,
     address: address,
@@ -180,17 +178,15 @@
     photosUpload: photosUpload,
     resetButton: resetButton,
 
+    setFieldsEnabled: setFieldsEnabled,
     toggleEnabled: toggleEnabled,
-    toggleDisabled: toggleDisabled,
     onHousingTypeChange: onHousingTypeChange,
     onCheckinCheckoutChange: onCheckinCheckoutChange,
     onCapacityChange: onCapacityChange,
     onPhotosUploadChange: onPhotosUploadChange,
-    resetFeatures: resetFeatures,
-    resetBlank: resetBlank,
-    onTitleSetRedBorder: onTitleSetRedBorder,
-    onPriceSetRedBorder: onPriceSetRedBorder,
-    onTitleRemoveRedBorder: onTitleRemoveRedBorder,
-    onPriceRemoveRedBorder: onPriceRemoveRedBorder
+    fullReset: fullReset,
+    onInputShowInvalid: onInputShowInvalid,
+    onTitleRemoveInvalid: onTitleRemoveInvalid,
+    onPriceRemoveInvalid: onPriceRemoveInvalid
   };
 })();

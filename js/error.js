@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var main = document.querySelector('main');
   var template = document.querySelector('#error').content.querySelector('div');
 
   var closeErrorMessage = function () {
@@ -8,10 +9,8 @@
   };
 
   var showMessage = function (message) {
-    var main = document.querySelector('main');
     var error = template.cloneNode(true);
     error.querySelector('.error__message').textContent = message;
-    main.appendChild(error);
 
     error.querySelector('.error__button').addEventListener('click', closeErrorMessage);
     error.addEventListener('click', closeErrorMessage);
@@ -20,6 +19,7 @@
       if (evt.keyCode === window.map.ESC_KEYCODE) {
         closeErrorMessage();
       }
+      main.appendChild(error);
     });
   };
 

@@ -69,7 +69,24 @@
   };
 
 
+  var closePopup = function () {
+    var popupCloseButton = document.querySelector('.popup__close');
+    var popup = document.querySelector('.popup');
+
+    document.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === window.map.ESC_KEYCODE) {
+        popup.remove();
+      }
+    });
+
+    popupCloseButton.addEventListener('click', function () {
+      popup.remove();
+    });
+  };
+
+
   window.card = {
-    showPopup: showPopup
+    showPopup: showPopup,
+    closePopup: closePopup
   };
 })();

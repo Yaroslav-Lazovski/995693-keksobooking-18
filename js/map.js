@@ -16,7 +16,7 @@
   var smallPin = mainPin.querySelector('img');
   var mainPinWidth = mainPin.offsetWidth;
   var mainPinHeight = mainPin.offsetHeight;
-  var filters = document.querySelectorAll('#map__filter');
+  var filters = document.querySelectorAll('.map__filter');
   var housingType = document.querySelector('#housing-type');
   var housingPrice = document.querySelector('#housing-price');
   var housingRooms = document.querySelector('#housing-rooms');
@@ -51,10 +51,10 @@
   var renderPins = function (adverts) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < adverts.length; i++) {
-      var pin = createPin(adverts[i]);
-      fragment.appendChild(pin);
-    }
+    adverts.map(createPin)
+      .forEach(function (pin) {
+        fragment.appendChild(pin);
+      });
 
     pins.appendChild(fragment);
   };
@@ -66,10 +66,6 @@
     } else {
       plan.classList.add('map--faded');
     }
-  };
-
-  var toggleDisabled = function () {
-    plan.classList.add('map--faded');
   };
 
   var getMainPinLocation = function (pinMain) {
@@ -208,6 +204,31 @@
     }
   };
 
+  var fullReset = function () {
+    window.map.mainPin.style.top = window.map.height / 2 + 'px';
+    window.map.mainPin.style.left = window.map.width / 2 + 'px';
+
+    for (var i = 0; i < filters.length; i++) {
+      filters[i].value = 'any';
+    }
+
+    if (document.querySelector('.popup')) {
+      document.querySelector('.popup').remove();
+    }
+
+    var renderedPins = document.querySelectorAll('.map__pin');
+
+    renderedPins.forEach(function (item) {
+      if (!item.classList.contains('map__pin--main')) {
+        item.remove();
+      }
+    });
+
+    toggleEnabled();
+    resetFilters();
+    resetFeatures();
+  };
+
 
   window.map = {
     ENTER_KEYCODE: ENTER_KEYCODE,
@@ -228,14 +249,12 @@
     createPin: createPin,
     renderPins: renderPins,
     toggleEnabled: toggleEnabled,
-    toggleDisabled: toggleDisabled,
     getMainPinLocation: getMainPinLocation,
     getSmallPinLocation: getSmallPinLocation,
     clear: clear,
     setFiltersChangedListener: setFiltersChangedListener,
     isOfferSuitable: isOfferSuitable,
     setPinClickListener: setPinClickListener,
-    resetFilters: resetFilters,
-    resetFeatures: resetFeatures
+    fullReset: fullReset,
   };
 })();

@@ -4,7 +4,7 @@
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
 
-  var handleUpload = function (file, preview) {
+  window.handleUpload = function (file, preview) {
     var fileName = file.name.toLowerCase();
 
     var matches = FILE_TYPES.some(function (it) {
@@ -20,9 +20,5 @@
 
       reader.readAsDataURL(file);
     }
-  };
-
-  window.photos = {
-    handleUpload: handleUpload
   };
 })();
