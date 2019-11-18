@@ -8,13 +8,8 @@
   var BORDER_TOP_Y_VALUE = 130;
   var BORDER_BOTTOM_Y_VALUE = 630;
 
-  var LOW_PRICE = 'low';
-  var LOW_PRICE_VALUE = 10000;
-  var MIDDLE_PRICE = 'middle';
-  var MIDDLE_PRICE_MIN_VALUE = 10000;
-  var MIDDLE_PRICE_MAX_VALUE = 50000;
-  var HIGH_PRICE = 'high';
-  var HIGH_PRICE_VALUE = 50000;
+  var PRICE_BETWEEN_LOW_MIDDLE = 10000;
+  var PRICE_BETWEEN_MIDDLE_HIGH = 50000;
 
   var plan = document.querySelector('.map');
   var pins = document.querySelector('.map__pins');
@@ -148,14 +143,21 @@
   };
 
 
+  var Price = {
+    LOW: 'low',
+    MIDDLE: 'middle',
+    HIGH: 'high'
+  };
+
+
   var isPriceSuitable = function (advert) {
     var selectedPrice = housingPrice.value;
 
-    if (selectedPrice === LOW_PRICE && advert.offer.price <= LOW_PRICE_VALUE) {
+    if (selectedPrice === Price.LOW && advert.offer.price <= PRICE_BETWEEN_LOW_MIDDLE) {
       selectedPrice = advert.offer.price;
-    } else if (selectedPrice === MIDDLE_PRICE && (advert.offer.price >= MIDDLE_PRICE_MIN_VALUE && advert.offer.price <= MIDDLE_PRICE_MAX_VALUE)) {
+    } else if (selectedPrice === Price.MIDDLE && (advert.offer.price >= PRICE_BETWEEN_LOW_MIDDLE && advert.offer.price <= PRICE_BETWEEN_MIDDLE_HIGH)) {
       selectedPrice = advert.offer.price;
-    } else if (selectedPrice === HIGH_PRICE && advert.offer.price >= HIGH_PRICE_VALUE) {
+    } else if (selectedPrice === Price.HIGH && advert.offer.price >= PRICE_BETWEEN_MIDDLE_HIGH) {
       selectedPrice = advert.offer.price;
     }
 

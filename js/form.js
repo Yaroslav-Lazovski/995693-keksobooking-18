@@ -22,18 +22,6 @@
   var previewPhotos = document.querySelector('.ad-form__photo');
   var resetButton = document.querySelector('.ad-form__reset');
 
-  var priceOfHouseObject = {
-    'palace placeholder': '10 000',
-    'flat placeholder': '1 000',
-    'house placeholder': '5 000',
-    'bungalo placeholder': '0',
-
-    'palace min': 10000,
-    'flat min': 1000,
-    'house min': 5000,
-    'bungalo min': 0,
-  };
-
 
   var setFieldsEnabled = function (fieldsets, enabled) {
     for (var i = 0; i < fieldsets.length; i++) {
@@ -54,24 +42,31 @@
     setFieldsEnabled(blankFieldsets, enabled);
   };
 
+  var Price = {
+    BUNGALO: 0,
+    FLAT: 1000,
+    HOUSE: 5000,
+    PALACE: 10000
+  };
+
 
   var onHousingTypeChange = function () {
     switch (typeOfHouse.value) {
       case 'palace':
-        priceOfHouse.setAttribute('placeholder', priceOfHouseObject['palace placeholder']);
-        priceOfHouse.setAttribute('min', priceOfHouseObject['palace min']);
+        priceOfHouse.setAttribute('placeholder', Price.PALACE);
+        priceOfHouse.setAttribute('min', Price.PALACE);
         break;
       case 'flat':
-        priceOfHouse.setAttribute('placeholder', priceOfHouseObject['flat placeholder']);
-        priceOfHouse.setAttribute('min', priceOfHouseObject['flat min']);
+        priceOfHouse.setAttribute('placeholder', Price.FLAT);
+        priceOfHouse.setAttribute('min', Price.FLAT);
         break;
       case 'house':
-        priceOfHouse.setAttribute('placeholder', priceOfHouseObject['house placeholder']);
-        priceOfHouse.setAttribute('min', priceOfHouseObject['house min']);
+        priceOfHouse.setAttribute('placeholder', Price.HOUSE);
+        priceOfHouse.setAttribute('min', Price.HOUSE);
         break;
       case 'bungalo':
-        priceOfHouse.setAttribute('placeholder', priceOfHouseObject['bungalo placeholder']);
-        priceOfHouse.setAttribute('min', priceOfHouseObject['bungalo min']);
+        priceOfHouse.setAttribute('placeholder', Price.BUNGALO);
+        priceOfHouse.setAttribute('min', Price.BUNGALO);
         break;
     }
     return null;
@@ -148,7 +143,7 @@
   };
 
 
-  var onInputShowInvalid = function (element) {
+  var setInvalid = function (element) {
     element.style.border = '3px solid #DD2C00';
   };
 
@@ -193,7 +188,7 @@
     onCapacityChange: onCapacityChange,
     onPhotosUploadChange: onPhotosUploadChange,
     fullReset: fullReset,
-    onInputShowInvalid: onInputShowInvalid,
+    setInvalid: setInvalid,
     onTitleRemoveInvalid: onTitleRemoveInvalid,
     onPriceRemoveInvalid: onPriceRemoveInvalid
   };

@@ -154,12 +154,12 @@
   window.form.roomNumber.addEventListener('change', window.form.onCapacityChange);
 
   window.form.title.addEventListener('invalid', function (evt) {
-    window.form.onInputShowInvalid(evt.target);
+    window.form.setInvalid(evt.target);
   });
   window.form.title.addEventListener('input', window.form.onTitleRemoveInvalid);
 
   window.form.priceOfHouse.addEventListener('invalid', function (evt) {
-    window.form.onInputShowInvalid(evt.target);
+    window.form.setInvalid(evt.target);
   });
   window.form.priceOfHouse.addEventListener('input', window.form.onPriceRemoveInvalid);
 
