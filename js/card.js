@@ -3,11 +3,11 @@
 (function () {
   var cardTemplate = document.querySelector('#card').content.querySelector('article');
 
-  var offerTypeObject = {
-    palace: 'Дворец',
-    flat: 'Квартира',
-    house: 'Дом',
-    bungalo: 'Бунгало',
+  var Type = {
+    PALACE: 'Дворец',
+    FLAT: 'Квартира',
+    HOUSE: 'Дом',
+    BUNGALO: 'Бунгало',
   };
 
 
@@ -29,14 +29,14 @@
 
   var getOfferTypeText = function (advert) {
     switch (advert.offer.type) {
-      case ('palace'):
-        return offerTypeObject.palace;
-      case ('flat'):
-        return offerTypeObject.flat;
-      case ('house'):
-        return offerTypeObject.house;
-      case ('bungalo'):
-        return offerTypeObject.bungalo;
+      case 'palace':
+        return Type.PALACE;
+      case 'flat':
+        return Type.FLAT;
+      case 'house':
+        return Type.HOUSE;
+      case 'bungalo':
+        return Type.BUNGALO;
     }
     return null;
   };
